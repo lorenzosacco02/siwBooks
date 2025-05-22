@@ -1,4 +1,4 @@
-package it.uniroma3.siw.siwbooks.Repository;
+package it.uniroma3.siw.siwbooks.repository;
 
 import it.uniroma3.siw.siwbooks.model.Book;
 import org.springframework.data.repository.CrudRepository;
