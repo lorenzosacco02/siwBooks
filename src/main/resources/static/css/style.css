@@ -1,18 +1,20 @@
+/* Box sizing universale */
+* {
+    box-sizing: border-box;
+}
+
 /* Navbar */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    height: 60px;
     background-color: #7190b1;
     color: #ecf0f1;
-    padding: 0.5rem 1rem;
+    padding: 1rem;
     z-index: 1000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-main {
-    padding-top: 60px; /* aumentato per evitare sovrapposizione con navbar */
 }
 
 .navbar-container {
@@ -65,7 +67,49 @@ main {
     text-decoration: underline;
 }
 
-/* Book grid */
+/* Layout globale */
+#app,
+main {
+    padding-top: 80px; /* evita sovrapposizione con navbar */
+}
+
+/* Homepage image link section */
+.image-link {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+    margin: 1rem auto;
+}
+
+.image-link:hover {
+    transform: scale(1.03);
+}
+
+.image-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.overlay-text {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+/* Griglia libri */
 .book-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -99,3 +143,13 @@ main {
     font-weight: bold;
     font-size: 1rem;
 }
+
+.home-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap; /* Utile su schermi piccoli */
+    padding: 2rem;
+}
+

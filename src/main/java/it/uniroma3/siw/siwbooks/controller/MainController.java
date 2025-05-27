@@ -13,8 +13,6 @@ public class MainController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("books", this.bookService.findAll());
-        model.addAttribute("message", "Hello World!");
         return "index";
     }
 }

@@ -1,9 +1,9 @@
 package it.uniroma3.siw.siwbooks.controller;
 
+import it.uniroma3.siw.siwbooks.model.Author;
 import it.uniroma3.siw.siwbooks.model.Book;
 import it.uniroma3.siw.siwbooks.model.Image;
-import it.uniroma3.siw.siwbooks.service.BookService;
-import it.uniroma3.siw.siwbooks.service.ImageService;
+import it.uniroma3.siw.siwbooks.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,16 +15,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
-public class BookController {
-    @Autowired
-    private ImageService imageService;
-    @Autowired
-    private BookService bookService;
+public class AuthorController {
 
-    @GetMapping("/book/{book_id}/cover")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long book_id) {
-        Book book = bookService.findById(book_id);
-        Image image = book.getCover();
+    @Autowired
+    private AuthorService authorService;
+
+    @GetMapping("/author/{author_id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable Long author_id) {
+        Author author = authorService.findById(author_id);
+        Image image = author.getImage();
 
         if (image == null || image.getContent() == null) {
             return ResponseEntity.notFound().build();
@@ -35,17 +34,9 @@ public class BookController {
         return new ResponseEntity<>(image.getContent(), headers, HttpStatus.OK);
     }
 
-    @GetMapping("/book/{book_id}")
-    public String getBook(@PathVariable Long book_id, Model model) {
-        Book book = bookService.findById(book_id);
-        model.addAttribute("book", book);
-        return "book";
-    }
-
-    @GetMapping("/books")
+    @GetMapping("/authors")
     public String getAllBooks(Model model) {
-        model.addAttribute("books", bookService.findAll());
-        return "books";
+        model.addAttribute("author", authorService.findAll());
+        return "authors";
     }
-
 }
