@@ -1,3 +1,4 @@
+/* Navbar */
 .navbar {
     position: fixed;
     top: 0;
@@ -11,9 +12,8 @@
 }
 
 main {
-    padding-top: 30px; /* almeno quanto l’altezza navbar */
+    padding-top: 60px; /* aumentato per evitare sovrapposizione con navbar */
 }
-
 
 .navbar-container {
     max-width: 1300px;
@@ -23,7 +23,6 @@ main {
     align-items: center;
 }
 
-/* Logo a sinistra */
 .navbar-logo {
     display: flex;
     align-items: center;
@@ -35,7 +34,7 @@ main {
 .navbar-logo-img {
     height: 30px;
     width: auto;
-    transform: scale(1.5); /* visivamente più grande */
+    transform: scale(1.5);
     transform-origin: center;
 }
 
@@ -44,7 +43,6 @@ main {
     font-size: 1rem;
 }
 
-/* Parte destra con link */
 .navbar-right {
     display: flex;
     align-items: center;
@@ -65,4 +63,39 @@ main {
 
 .navbar a:hover {
     text-decoration: underline;
+}
+
+/* Book grid */
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.book-card {
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.book-card:hover {
+    transform: scale(1.03);
+}
+
+.book-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.book-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.book-title {
+    margin-top: 0.5rem;
+    font-weight: bold;
+    font-size: 1rem;
 }

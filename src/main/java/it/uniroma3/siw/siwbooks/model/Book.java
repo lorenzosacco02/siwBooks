@@ -12,10 +12,11 @@ public class Book {
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private Integer publicationYear;
 
     @Column(nullable = false)
-    private Integer publicationYear;
+    private String title;
+
 
     @OneToOne
     private Image cover;

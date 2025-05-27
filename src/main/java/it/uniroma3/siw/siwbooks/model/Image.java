@@ -9,10 +9,13 @@ import java.util.Objects;
 public class Image {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
     @Lob
+    @Column(columnDefinition = "BYTEA")
     private byte[] content;
 
     public Long getId() {
@@ -29,6 +32,14 @@ public class Image {
 
     public void setContent(byte[] content) {
         this.content = content;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
