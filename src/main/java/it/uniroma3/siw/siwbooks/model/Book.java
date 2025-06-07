@@ -12,13 +12,19 @@ public class Book {
     private Long id;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
     private Integer publicationYear;
 
-    @Column(name = "image_path")
-    private List<String> images;  // path alle immagini salvate in resources/static/images/books/
+    @Column(nullable = false)
+    private String title;
+
+
+    @OneToOne
+    private Image cover;
+
+    @OneToMany
+    @JoinColumn(name = "book_id")
+    @Column(name = "images")
+    private List<Image> images;
 
     @ManyToMany
     private List<Author> authors;
@@ -50,12 +56,12 @@ public class Book {
         this.publicationYear = publicationYear;
     }
 
-    public List<String> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(List<String> imagePaths) {
-        this.images = imagePaths;
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
     public List<Author> getAuthors() {
@@ -72,6 +78,14 @@ public class Book {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public Image getCover() {
+        return cover;
+    }
+
+    public void setCover(Image cover) {
+        this.cover = cover;
     }
 
     @Override

@@ -12,7 +12,7 @@ public class BookService {
     private BookRepository bookRepository;
 
     public Book findById(Long id) {
-        return bookRepository.findById(id).get();
+        return bookRepository.findById(id).orElse(null);
     }
 
     public Iterable<Book> findAll() {

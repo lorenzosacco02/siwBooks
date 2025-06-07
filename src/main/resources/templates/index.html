@@ -2,11 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Home</title>
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-  <div>SIWBOOKS esplora la tua biblioteca virtuale</div>
-  <p th:text="${message}">Testo di fallback</p>
+<!-- Include la navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main id="app">
+    <div class="home-buttons">
+        <div class="books-button image-link">
+            <a th:href="@{/books}">
+                <img src="/images/books.jpg" alt="Vai ai Libri">
+                <div class="overlay-text">Esplora i libri</div>
+            </a>
+        </div>
+        <div class="authors-button image-link">
+            <a th:href="@{/authors}">
+                <img src="/images/authors.jpg" alt="Vai agli Autori">
+                <div class="overlay-text">Esplora gli scrittori</div>
+            </a>
+        </div>
+    </div>
+</main>
+
+
 </body>
 </html>

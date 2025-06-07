@@ -26,7 +26,8 @@ public class Author {
 
     private LocalDate dateOfDeath;
 
-    private String image;
+    @OneToOne
+    private Image image;
 
     @ManyToMany(mappedBy="authors")
     private List<Book> written;
@@ -71,11 +72,11 @@ public class Author {
         this.dateOfDeath = dateOfDeath;
     }
 
-    public String getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
