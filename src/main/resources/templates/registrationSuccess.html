@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<!-- Include la navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<h1>Benvenuto!</h1>
+<div>
+    <span>Nome: </span>
+    <span th:text="${user.name}"></span>
+</div>
+<div>
+    <span>Cognome: </span>
+    <span th:text="${user.surname}"></span>
+</div>
+<div>
+    <span>Username: </span>
+    <span th:text="${user.username}"></span>
+</div>
+</body>
+</html>

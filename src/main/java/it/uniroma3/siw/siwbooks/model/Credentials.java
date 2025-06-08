@@ -25,7 +25,7 @@ public class Credentials {
 
     private String role;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private User user;
 
     public Long getId() {
