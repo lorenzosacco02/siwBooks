@@ -10,6 +10,8 @@
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <main id="app">
+    @<div th:text="${userDetails != null ? userDetails.getName() : 'Utente anonimo'}">Nome</div>
+
     <div class="home-buttons">
         <div class="books-button image-link">
             <a th:href="@{/books}">
