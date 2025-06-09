@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class BookController {
-    @Autowired
-    private ImageService imageService;
+
     @Autowired
     private BookService bookService;
 

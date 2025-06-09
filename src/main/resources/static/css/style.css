@@ -3,74 +3,33 @@
     box-sizing: border-box;
 }
 
-/* Navbar */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background-color: #7190b1;
-    color: #ecf0f1;
-    padding: 1rem;
-    z-index: 1000;
+/* Personalizzazione sicura della navbar Bootstrap */
+.navbar-custom {
+    background-color: #7190b1 !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-container {
-    max-width: 1300px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.navbar-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    color: #ecf0f1;
-}
-
-.navbar-logo-img {
-    height: 30px;
-    width: auto;
-    transform: scale(1.5);
-    transform-origin: center;
-}
-
-.navbar-logo-text {
-    font-weight: bold;
-    font-size: 1rem;
-}
-
-.navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.navbar-links,
-.navbar-auth {
-    display: flex;
-    gap: 1rem;
-}
-
-.navbar a {
-    color: #ecf0f1;
-    text-decoration: none;
+/* Colori dei link della navbar */
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: #ecf0f1 !important;
     font-weight: 500;
 }
 
-.navbar a:hover {
+/* Hover */
+.navbar-custom .nav-link:hover {
     text-decoration: underline;
+    color: #ffffff !important;
+}
+
+/* Per evitare che il contenuto venga coperto dalla navbar fissa */
+body {
+    padding-top: 70px;
 }
 
 /* Layout globale */
 #app,
 main {
-    padding-top: 80px; /* evita sovrapposizione con navbar */
 }
 
 /* Homepage image link section */
