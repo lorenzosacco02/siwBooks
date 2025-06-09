@@ -1,9 +1,12 @@
 package it.uniroma3.siw.siwbooks.service;
 
+import it.uniroma3.siw.siwbooks.model.Book;
 import it.uniroma3.siw.siwbooks.model.Review;
 import it.uniroma3.siw.siwbooks.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReviewService {
@@ -23,4 +26,7 @@ public class ReviewService {
         reviewRepository.save(movie);
     }
 
+    public List<Review> getReviewsForBook(Book book) {
+        return reviewRepository.findByBook(book);
+    }
 }
