@@ -1,49 +1,27 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <!-- Assicurati che Bootstrap sia incluso nel layout principale -->
-</head>
-<body>
-
-<nav th:fragment="navbar"  class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">MyApp</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="/">Home</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Navbar non autenticato -->
-    <div class="collapse navbar-collapse" id="navbar" th:if="${user == null}">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav ms-auto" th:if="${userDetails == null}">
         <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
         <li class="nav-item"><a class="nav-link" href="/register">Registrati</a></li>
       </ul>
-    </div>
 
-    <!-- Navbar utente DEFAULT -->
-    <div class="collapse navbar-collapse" id="navbarDefault"
-         th:if="${user != null and user.role == 'DEFAULT'}">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="/profilo">Profilo</a></li>
+      <ul class="navbar-nav ms-auto" th:if="${userDetails != null and isDefault}">
+        <li class="nav-item"><a class="nav-link" href="/profile">Profilo</a></li>
         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
       </ul>
-    </div>
 
-    <!-- Navbar ADMIN -->
-    <div class="collapse navbar-collapse" id="navbarAdmin"
-         th:if="${user != null and user.role == 'ADMIN'}">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+      <ul class="navbar-nav ms-auto" th:if="${userDetails != null and isAdmin}">
         <li class="nav-item"><a class="nav-link" href="/admin">Pannello Admin</a></li>
-        <li class="nav-item"><a class="nav-link" href="/profilo">Profilo</a></li>
+        <li class="nav-item"><a class="nav-link" href="/profile">Profilo</a></li>
         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
       </ul>
     </div>
   </div>
 </nav>
-
-</body>
-</html>

@@ -20,4 +20,20 @@ public class GlobalController {
         }
         return user;
     }
+
+    @ModelAttribute("isDefault")
+    public boolean isDefault() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("DEFAULT"));
+    }
+
+    @ModelAttribute("isAdmin")
+    public boolean isAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ADMIN"));
+    }
+
+
 }
