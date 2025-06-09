@@ -66,7 +66,7 @@ public class AuthController {
             return "index";
         }
 
-        @PostMapping(value = { "/register" })
+    @PostMapping(value = { "/register" })
         public String registerUser(@Valid @ModelAttribute("user") User user,
                                    BindingResult userBindingResult, @Valid
                                    @ModelAttribute("credentials") Credentials credentials,

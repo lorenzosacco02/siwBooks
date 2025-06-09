@@ -34,9 +34,16 @@ public class AuthorController {
         return new ResponseEntity<>(image.getContent(), headers, HttpStatus.OK);
     }
 
+    @GetMapping("/author/{author_id}")
+    public String getAuthor(@PathVariable Long author_id, Model model) {
+        Author author = authorService.findById(author_id);
+        model.addAttribute("author", author);
+        return "author";
+    }
+
     @GetMapping("/authors")
-    public String getAllBooks(Model model) {
-        model.addAttribute("author", authorService.findAll());
+    public String getAllAuthors(Model model) {
+        model.addAttribute("authors", authorService.findAll());
         return "authors";
     }
 }
