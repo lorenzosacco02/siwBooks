@@ -5,6 +5,8 @@ import it.uniroma3.siw.siwbooks.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BookService {
 
@@ -23,4 +25,7 @@ public class BookService {
         bookRepository.save(movie);
     }
 
+    public List<Book> searchByTitle(String title) {
+        return bookRepository.findByTitleContainingIgnoreCase(title);
+    }
 }

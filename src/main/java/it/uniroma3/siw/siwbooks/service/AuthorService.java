@@ -5,6 +5,9 @@ import it.uniroma3.siw.siwbooks.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AuthorService {
 
@@ -23,4 +26,9 @@ public class AuthorService {
         authorRepository.save(movie);
     }
 
+    public List<Author> searchByName(String name) {
+        List<Author> authors = authorRepository.findByNameContainingIgnoreCase(name);
+        authors.addAll(authorRepository.findBySurnameContainingIgnoreCase(name));
+        return authors;
+    }
 }
