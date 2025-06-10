@@ -35,8 +35,9 @@ public class ReviewController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping("/book/{book_id}/reviews")
+    @GetMapping("/book/{book_id}/addReview")
     public String addReview(@PathVariable("book_id") Long bookId, Model model) {
+        model.addAttribute("review", new Review());
         model.addAttribute("book", bookService.findById(bookId));
         return "formNewReview";
     }
@@ -52,9 +53,10 @@ public class ReviewController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("book", book);
             model.addAttribute("reviews", reviewService.getReviewsForBook(book));
-            return "bookDetails";
+            return "/book"+bookId;
         }
 
+        System.out.println(userService.getCurrentUser());
         review.setAuthor(userService.getCurrentUser());
         review.setBook(book);
 

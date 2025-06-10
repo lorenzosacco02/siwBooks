@@ -42,11 +42,22 @@
     <!-- Recensioni -->
     <div class="book-reviews">
         <h3>Recensioni</h3>
+
+        <!-- Bottone per aggiungere una recensione -->
+        <div class="text-center mt-4"
+             th:if="${userDetails != null}">
+            <a th:href="@{'/book/' + ${book.id} + '/addReview'}"
+               class="btn btn-primary">
+                Aggiungi Recensione
+            </a>
+        </div>
+
         <div th:each="review : ${book.reviews}">
-            <p>
-                <strong th:text="${review.reviewerName}">Nome recensore</strong>:
-                <span th:text="${review.comment}">Commento</span>
-            </p>
+            <div class="container mt-4">
+                <strong th:text="${review.author.username}">Nome recensore</strong>:
+                <h4 th:text="${review.title}">titolo</h4>
+                <span th:text="${review.text}">Testo</span>
+            </div>
         </div>
     </div>
 </div>

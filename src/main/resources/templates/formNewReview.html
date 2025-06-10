@@ -14,25 +14,39 @@
 
 <h2>Aggiungi una recensione</h2>
 
-<form th:action="@{/book/${book.id}/reviews}"
-      th:object="${review}" method="post">
+<div class="container mt-5">
+    <h2>Aggiungi una recensione</h2>
 
-    <div>
-        <label for="content">Contenuto:</label><br>
-        <textarea id="content" th:field="*{review.text}" rows="5" cols="50" required></textarea>
-        <div th:if="${#fields.hasErrors('content')}"
-             th:errors="*{text}"></div>
-    </div>
+    <form th:action="@{/book/{id}/reviews(id=${book.id})}" th:object="${review}" method="post" class="mt-4">
 
-    <div>
-        <label for="rating">Valutazione (1-5):</label><br>
-        <input type="number" id="rating" th:field="*{rating}" min="1" max="5" required />
-        <div th:if="${#fields.hasErrors('rating')}"
-             th:errors="*{rating}"></div>
-    </div>
+        <!-- Campo testo recensione -->
+        <div class="mb-3">
+            <label for="title" class="form-label">Titolo</label>
+            <textarea th:field="*{title}" class="form-control" id="title" rows="1" required></textarea>
+        </div>
 
-    <br>
-    <button type="submit">Invia Recensione</button>
-</form>
+        <!-- Campo testo recensione -->
+        <div class="mb-3">
+            <label for="content" class="form-label">Recensione</label>
+            <textarea th:field="*{text}" class="form-control" id="content" rows="4" required></textarea>
+        </div>
+
+        <!-- Campo voto -->
+        <div class="mb-3">
+            <label for="rating" class="form-label">Voto</label>
+            <select th:field="*{rating}" class="form-select" id="rating" required>
+                <option th:value="1">1</option>
+                <option th:value="2">2</option>
+                <option th:value="3">3</option>
+                <option th:value="4">4</option>
+                <option th:value="5">5</option>
+            </select>
+        </div>
+
+        <!-- Pulsante di invio -->
+        <button type="submit" class="btn btn-primary">Invia recensione</button>
+    </form>
+</div>
+
 </body>
 </html>
