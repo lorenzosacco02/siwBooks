@@ -55,8 +55,15 @@
         <div th:each="review : ${book.reviews}">
             <div class="container mt-4">
                 <strong th:text="${review.author.username}">Nome recensore</strong>:
-                <h4 th:text="${review.title}">titolo</h4>
+                <h4 th:text="${review.title}">Titolo</h4>
                 <span th:text="${review.text}">Testo</span>
+                <span th:text="${review.rating}">Voto</span>
+            </div>
+            <!-- Bottone visibile solo se l'utente loggato è l'autore -->
+            <div th:if="${userDetails != null and userDetails.username == review.author.username}">
+                <a th:href="@{'/book/' + ${book.id} + '/updateReview/' + ${review.id}}" class="btn btn-sm btn-warning">
+                    Modifica
+                </a>
             </div>
         </div>
     </div>

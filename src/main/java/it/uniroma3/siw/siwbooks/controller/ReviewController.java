@@ -16,12 +16,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class ReviewController {
@@ -42,7 +42,7 @@ public class ReviewController {
         return "formNewReview";
     }
 
-    @PostMapping("/book/{book_id}/reviews")
+    @PostMapping("/book/{book_id}/addReview")
     public String saveReview(@PathVariable("book_id") Long bookId,
                             @Valid @ModelAttribute("review") Review review,
                             BindingResult bindingResult,
@@ -64,4 +64,26 @@ public class ReviewController {
 
         return "redirect:/book/" + bookId;
     }
+
+
+    @GetMapping("/book/{book_id}/updateReview/{review_id}")
+    public String updateReview(@PathVariable("book_id") Long bookId, @PathVariable("review_id") Long reviewId, Model model) {
+        Review review = reviewService.findById(reviewId);
+        if(userService.getCurrentUser() == review.getAuthor()){
+            model.addAttribute("review", review.getId());
+            model.addAttribute("book", bookService.findById(bookId));
+            return "formModifyReview";
+        }
+        return "accessDenied";
+    }
+
+    @PostMapping("/book/{book_id}/updateReview/{review_id}")
+    public String updateReview(@PathVariable("book_id") Long bookId,
+                               @PathVariable("review_id") Long reviewId,
+                               @ModelAttribute("review") Review updatedReview,
+                               Principal principal) {
+        reviewService.update(reviewId, updatedReview.getTitle(), updatedReview.getText(), updatedReview.getRating());
+        return "redirect:/book/" + bookId;
+    }
+
 }

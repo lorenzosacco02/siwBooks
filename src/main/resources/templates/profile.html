@@ -11,8 +11,9 @@
 <body>
 <!-- Include la navbar -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-<h1>Ciao <span th:text="${user.username}" th:alt="user"></span>!</h1>
+<h1>Ciao <span th:text="${userDetails.username}" th:alt="user"></span>!</h1>
 
+<p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
 <p><strong>Nome:</strong> <span th:text="${user.name}"></span></p>
 <p><strong>Cognome:</strong> <span th:text="${user.surname}"></span></p>
 <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>

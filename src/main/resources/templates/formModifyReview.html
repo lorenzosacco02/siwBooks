@@ -17,7 +17,7 @@
 <div class="container mt-5">
     <h2>Aggiungi una recensione</h2>
 
-    <form th:action="@{/book/{id}/addReview(id=${book.id})}" th:object="${review}" method="post" class="mt-4">
+    <form th:action="@{'/book/' + ${book.id} + '/updateReview/'+ ${review.id} }" th:object="${review}" method="post" class="mt-4">
 
         <!-- Campo testo recensione -->
         <div class="mb-3">

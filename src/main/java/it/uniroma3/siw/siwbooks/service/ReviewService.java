@@ -22,11 +22,19 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
-    public void save(Review movie) {
-        reviewRepository.save(movie);
+    public void save(Review review) {
+        reviewRepository.save(review);
     }
 
     public List<Review> getReviewsForBook(Book book) {
         return reviewRepository.findByBook(book);
+    }
+
+    public void update(Long reviewId, String title, String text, Integer rating){
+        Review review = this.findById(reviewId);
+        review.setTitle(title);
+        review.setText(text);
+        review.setRating(rating);
+        save(review);
     }
 }
