@@ -2,6 +2,7 @@ package it.uniroma3.siw.siwbooks.service;
 
 import it.uniroma3.siw.siwbooks.model.Book;
 import it.uniroma3.siw.siwbooks.model.Review;
+import it.uniroma3.siw.siwbooks.model.User;
 import it.uniroma3.siw.siwbooks.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,9 @@ public class ReviewService {
         review.setText(text);
         review.setRating(rating);
         save(review);
+    }
+
+    public boolean userHasAlreadyReviewed(Book book, User user) {
+        return reviewRepository.existsByBookAndAuthor(book, user);
     }
 }

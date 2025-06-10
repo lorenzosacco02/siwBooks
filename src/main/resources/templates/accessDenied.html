@@ -13,7 +13,8 @@
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <h1>Accesso Negato</h1>
-<p>Non hai i permessi per visualizzare questa pagina.</p>
+<div th:if="${error}" class="alert alert-danger" role="alert"
+     th:text="${error} ?: 'Errore sconosciuto.'"></div>
 <a href="/">Torna alla Home</a>
 </body>
 </html>

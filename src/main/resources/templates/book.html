@@ -45,7 +45,10 @@
 
         <!-- Bottone per aggiungere una recensione -->
         <div class="text-center mt-4"
+             id="addReviewButton"
              th:if="${userDetails != null}">
+            <div th:if="${error}" class="alert" role="alert"
+                 th:text="${error} ?: 'Errore sconosciuto.'"></div>
             <a th:href="@{'/book/' + ${book.id} + '/addReview'}"
                class="btn btn-primary">
                 Aggiungi Recensione

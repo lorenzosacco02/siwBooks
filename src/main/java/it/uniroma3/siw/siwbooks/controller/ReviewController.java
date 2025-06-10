@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -36,7 +37,15 @@ public class ReviewController {
     private BookService bookService;
 
     @GetMapping("/book/{book_id}/addReview")
-    public String addReview(@PathVariable("book_id") Long bookId, Model model) {
+    public String addReview(@PathVariable("book_id") Long bookId,
+                            RedirectAttributes redirectAttributes,
+                            Model model) {
+        Book book = bookService.findById(bookId);
+        User currentUser = userService.getCurrentUser();
+        if (reviewService.userHasAlreadyReviewed(book, currentUser)) {
+            redirectAttributes.addFlashAttribute("error", "Hai già recensito questo libro.");
+            return "redirect:/book/" + bookId + "#addReviewButton";
+        }
         model.addAttribute("review", new Review());
         model.addAttribute("book", bookService.findById(bookId));
         return "formNewReview";
@@ -44,9 +53,10 @@ public class ReviewController {
 
     @PostMapping("/book/{book_id}/addReview")
     public String saveReview(@PathVariable("book_id") Long bookId,
-                            @Valid @ModelAttribute("review") Review review,
-                            BindingResult bindingResult,
-                            Model model, Principal principal) {
+                             @Valid @ModelAttribute("review") Review review,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes,
+                             Model model, Principal principal) {
 
         Book book = bookService.findById(bookId);
 
@@ -55,8 +65,11 @@ public class ReviewController {
             model.addAttribute("reviews", reviewService.getReviewsForBook(book));
             return "/book"+bookId;
         }
-
-        System.out.println(userService.getCurrentUser());
+        User currentUser = userService.getCurrentUser();
+        if (reviewService.userHasAlreadyReviewed(book, currentUser)) {
+            redirectAttributes.addFlashAttribute("error", "Hai già recensito questo libro.");
+            return "redirect:/accessDenied";
+        }
         review.setAuthor(userService.getCurrentUser());
         review.setBook(book);
 
@@ -67,7 +80,9 @@ public class ReviewController {
 
 
     @GetMapping("/book/{book_id}/updateReview/{review_id}")
-    public String updateReview(@PathVariable("book_id") Long bookId, @PathVariable("review_id") Long reviewId, Model model) {
+    public String updateReview(@PathVariable("book_id") Long bookId,
+                               @PathVariable("review_id") Long reviewId,
+                               Model model) {
         Review review = reviewService.findById(reviewId);
         if(userService.getCurrentUser() == review.getAuthor()){
             model.addAttribute("review", review.getId());

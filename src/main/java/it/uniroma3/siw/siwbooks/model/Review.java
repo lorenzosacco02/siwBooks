@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"author_id", "book_id"})
+})
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
