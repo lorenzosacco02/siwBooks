@@ -1,6 +1,8 @@
 package it.uniroma3.siw.siwbooks.model;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,17 +19,16 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
-
     @OneToOne
     private Image cover;
 
     @OneToMany
     @JoinColumn(name = "book_id")
     @Column(name = "images")
-    private List<Image> images;
+    private List<Image> images = new ArrayList<>();
 
     @ManyToMany
-    private List<Author> authors;
+    private List<Author> authors = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
@@ -92,11 +93,11 @@ public class Book {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return Objects.equals(getTitle(), book.getTitle()) && Objects.equals(getPublicationYear(), book.getPublicationYear()) && Objects.equals(getAuthors(), book.getAuthors());
+        return Objects.equals(getTitle(), book.getTitle()) && Objects.equals(getPublicationYear(), book.getPublicationYear());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTitle(), getPublicationYear(), getAuthors());
+        return Objects.hash(getTitle(), getPublicationYear());
     }
 }

@@ -34,11 +34,11 @@ public class SearchController {
         if (type == null || type.isEmpty()) {
             // Cerca sia libri che autori
             books = bookService.searchByTitle(query);
-            authors = authorService.searchByName(query);
+            authors = authorService.searchByNameOrSurname(query);
         } else if ("books".equals(type)) {
             books = bookService.searchByTitle(query);
         } else if ("authors".equals(type)) {
-            authors = authorService.searchByName(query);
+            authors = authorService.searchByNameOrSurname(query);
         }
 
         model.addAttribute("books", books);

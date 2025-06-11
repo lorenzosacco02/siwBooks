@@ -85,7 +85,7 @@ public class ReviewController {
                                Model model) {
         Review review = reviewService.findById(reviewId);
         if(userService.getCurrentUser() == review.getAuthor()){
-            model.addAttribute("review", review.getId());
+            model.addAttribute("review", review);
             model.addAttribute("book", bookService.findById(bookId));
             return "formModifyReview";
         }
@@ -95,8 +95,7 @@ public class ReviewController {
     @PostMapping("/book/{book_id}/updateReview/{review_id}")
     public String updateReview(@PathVariable("book_id") Long bookId,
                                @PathVariable("review_id") Long reviewId,
-                               @ModelAttribute("review") Review updatedReview,
-                               Principal principal) {
+                               @ModelAttribute("review") Review updatedReview) {
         reviewService.update(reviewId, updatedReview.getTitle(), updatedReview.getText(), updatedReview.getRating());
         return "redirect:/book/" + bookId;
     }

@@ -28,7 +28,7 @@
     <div class="book-images">
         <h3>Immagini del libro</h3>
         <div th:each="img : ${book.images}">
-            <img th:src="@{/images/{file}(file=${img.fileName})}" alt="Immagine del libro">
+            <img th:src="@{'/book/' + ${book.id} + '/images/' + ${img.id}}" alt="Immagine del libro">
         </div>
     </div>
 

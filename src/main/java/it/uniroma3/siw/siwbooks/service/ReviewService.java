@@ -6,6 +6,7 @@ import it.uniroma3.siw.siwbooks.model.User;
 import it.uniroma3.siw.siwbooks.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,22 +16,27 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Transactional
     public Review findById(Long id) {
         return reviewRepository.findById(id).get();
     }
 
+    @Transactional
     public Iterable<Review> findAll() {
         return reviewRepository.findAll();
     }
 
+    @Transactional
     public void save(Review review) {
         reviewRepository.save(review);
     }
 
+    @Transactional
     public List<Review> getReviewsForBook(Book book) {
         return reviewRepository.findByBook(book);
     }
 
+    @Transactional
     public void update(Long reviewId, String title, String text, Integer rating){
         Review review = this.findById(reviewId);
         review.setTitle(title);
@@ -39,6 +45,7 @@ public class ReviewService {
         save(review);
     }
 
+    @Transactional
     public boolean userHasAlreadyReviewed(Book book, User user) {
         return reviewRepository.existsByBookAndAuthor(book, user);
     }

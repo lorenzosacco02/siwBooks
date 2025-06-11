@@ -8,5 +8,11 @@ import java.util.List;
 
 public interface AuthorRepository extends CrudRepository<Author, Long> {
     List<Author> findByNameContainingIgnoreCase(String name);
+
     Collection<? extends Author> findBySurnameContainingIgnoreCase(String name);
+
+    List<Author> findByNameStartingWithIgnoreCase(String prefix);
+
+    List<Author> findBySurnameStartingWithIgnoreCase(String prefix);
+
 }

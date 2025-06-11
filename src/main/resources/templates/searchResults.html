@@ -20,7 +20,7 @@
   <!-- Autori -->
   <div th:if="${authors.size() > 0}">
     <h3>Autori</h3>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
       <div class="col" th:each="author : ${authors}">
         <a th:href="@{'/author/' + ${author.id}}" class="text-decoration-none text-dark">
           <div class="card h-100">
