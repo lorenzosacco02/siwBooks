@@ -36,7 +36,7 @@
     <div class="book-authors">
         <h3>Autori</h3>
         <ul>
-            <li th:each="author : ${book.authors}" th:text="${author.name}">Autore</li>
+            <li th:each="author : ${book.authors}" th:text="${author.name} + '' + ${author.surname}">Autore</li>
         </ul>
     </div>
 

@@ -73,10 +73,8 @@ public class AuthorService {
             author.setImage(image);
         }
 
-        List<Author> newAuthor = new ArrayList<Author>();
-        newAuthor.add(author);
         for (Book book : author.getWritten()) {
-            book.setAuthors(newAuthor);
+            book.getAuthors().add(author);
         }
 
         this.save(author);

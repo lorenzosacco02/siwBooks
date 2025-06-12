@@ -77,7 +77,7 @@ public class BookController {
 
 
     @GetMapping("/admin/formNewBook/addAuthor/{id}")
-    public String getAllBooks(Model model,
+    public String getAllAuthors(Model model,
                               HttpSession session,
                               @PathVariable Long id) {
         Book book = (Book) session.getAttribute("book");
