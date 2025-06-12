@@ -12,8 +12,8 @@ public class ImageService {
     private ImageRepository imageRepository;
 
     @Transactional
-    public Image saveImage(Image image) {
-        return imageRepository.save(image);
+    public void save(Image image) {
+        imageRepository.save(image);
     }
 
     @Transactional
@@ -25,4 +25,5 @@ public class ImageService {
     public Image getImage(Long id) {
         return imageRepository.findById(id).orElse(null);
     }
+
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -24,13 +25,14 @@ public class Author {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfDeath;
 
     @OneToOne
     private Image image;
 
     @ManyToMany(mappedBy="authors")
-    private List<Book> written;
+    private List<Book> written = new ArrayList<>();
 
     public Long getId() {
         return id;
