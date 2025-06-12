@@ -62,7 +62,7 @@ public class AuthorService {
     }
 
     @Transactional
-    public void registerAuthor(Author author, MultipartFile photo) throws IOException {
+    public void registerAuthor(Author author, MultipartFile photo, List<Book> selected) throws IOException {
 
         if (!photo.isEmpty()) {
             Image image = new Image();
@@ -73,8 +73,16 @@ public class AuthorService {
             author.setImage(image);
         }
 
+        for (Book book : selected) {
+            if(!author.getWritten().contains(book)) {
+                author.getWritten().add(book);
+            }
+        }
+
         for (Book book : author.getWritten()) {
-            book.getAuthors().add(author);
+            if (!book.getAuthors().contains(author)) {
+                book.getAuthors().add(author);
+            }
         }
 
         this.save(author);

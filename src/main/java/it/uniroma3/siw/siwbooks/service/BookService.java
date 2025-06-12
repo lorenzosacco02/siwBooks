@@ -1,5 +1,6 @@
 package it.uniroma3.siw.siwbooks.service;
 
+import it.uniroma3.siw.siwbooks.model.Author;
 import it.uniroma3.siw.siwbooks.model.Book;
 import it.uniroma3.siw.siwbooks.model.Image;
 import it.uniroma3.siw.siwbooks.repository.BookRepository;
@@ -40,7 +41,7 @@ public class BookService {
     }
 
     @Transactional
-    public void registerBook(Book book, MultipartFile photo, MultipartFile[] images) throws IOException {
+    public void registerBook(Book book, MultipartFile photo, MultipartFile[] images, List<Author> selected) throws IOException {
         if (!photo.isEmpty()) {
             Image image = new Image();
             image.setName(photo.getOriginalFilename());
@@ -59,6 +60,11 @@ public class BookService {
 
                 book.getImages().add(image);
             }
+        }
+
+        // Associazione con autori (usando entità gestite dal contesto)
+        for (Author author : selected) {
+            book.getAuthors().add(author);
         }
 
         this.save(book);

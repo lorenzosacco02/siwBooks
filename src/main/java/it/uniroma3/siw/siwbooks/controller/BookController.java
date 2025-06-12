@@ -15,12 +15,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class BookController {
@@ -32,6 +36,13 @@ public class BookController {
     private BookService bookService;
     @Autowired
     private AuthorService authorService;
+
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        // Dici a Spring: non provare a bindare automaticamente il campo `images`
+        binder.setDisallowedFields("images");
+    }
 
     @GetMapping("/book/{book_id}/cover")
     public ResponseEntity<byte[]> getImage(@PathVariable Long book_id) {
@@ -76,31 +87,9 @@ public class BookController {
     }
 
 
-    @GetMapping("/admin/formNewBook/addAuthor/{id}")
-    public String getAllAuthors(Model model,
-                              HttpSession session,
-                              @PathVariable Long id) {
-        Book book = (Book) session.getAttribute("book");
-        Author author = authorService.findById(id);
-        List<Author> addedAuthors = book.getAuthors();
-        if (!addedAuthors.contains(author)) {
-            book.getAuthors().add(author);
-        }
-        model.addAttribute("book", book);
-        List<Author> newAuthors = (List<Author>)authorService.findAll();
-        newAuthors.removeAll(addedAuthors);
-        model.addAttribute("authors", newAuthors);
-        return "admin/formNewBook";
-    }
-
     @GetMapping("/admin/addBook")
-    public String addBook(Model model,
-                          HttpSession session) {
-        Book book = (Book) session.getAttribute("book");
-        if (book == null){
-            book = new Book();
-        }
-        session.setAttribute("book", book);
+    public String addBook(Model model) {
+        Book book = new Book();
         model.addAttribute("authors", authorService.findAll());
         model.addAttribute("book", new Book());
         return "admin/formNewBook";
@@ -109,27 +98,34 @@ public class BookController {
 
     @PostMapping("/admin/addBook")
     public String saveBook(@ModelAttribute("book") Book book,
-                             BindingResult bindingResult,
-                             HttpSession session,
-                             RedirectAttributes redirectAttributes,
-                             @RequestParam("photo") MultipartFile photo,
-                             @RequestParam("images") MultipartFile[] images,
-                             Model model) throws IOException {
+                           @RequestParam(value = "authorIds", required = false) String authorIds,
+                           @RequestParam("photo") MultipartFile photo,
+                           @RequestParam("images") MultipartFile[] images,
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes,
+                           Model model) throws IOException {
 
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("errors", bindingResult.getAllErrors());
-//            model.addAttribute("book", book);
-//            return "admin/formNewBook";
-//        }
-
-        try{
-            bookService.registerBook(book, photo, images);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("book", book);
+            return "admin/formNewBook";
         }
-        catch(IOException e){
+
+
+        List<Author> selectedAuthors = new ArrayList<>();
+        if (!authorIds.isEmpty()) {
+            selectedAuthors = Arrays.stream(authorIds.split(","))
+                    .map(Long::parseLong)
+                    .map(authorService::findById)
+                    .collect(Collectors.toList());
+        }
+
+        try {
+            bookService.registerBook(book, photo, images, selectedAuthors);
+        } catch (IOException e) {
             return "redirect:/";
         }
 
-        session.removeAttribute("book");
         redirectAttributes.addFlashAttribute("success", "Libro aggiunto con successo!");
         return "redirect:/book/" + book.getId();
     }

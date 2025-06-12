@@ -21,7 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class AuthorController {
@@ -61,31 +63,9 @@ public class AuthorController {
         return "authors";
     }
 
-    @GetMapping("/admin/formNewAuthor/addBook/{id}")
-    public String getAllBooks(Model model,
-                              HttpSession session,
-                              @PathVariable Long id) {
-        Author author = (Author) session.getAttribute("author");
-        Book book = bookService.findById(id);
-        List<Book> writtenBooks = author.getWritten();
-        if (!writtenBooks.contains(book)) {
-            author.getWritten().add(book);
-        }
-        model.addAttribute("author", author);
-        List<Book> newBooks = (List<Book>)bookService.findAll();
-        newBooks.removeAll(writtenBooks);
-        model.addAttribute("books", newBooks);
-        return "admin/formNewAuthor";
-    }
-
     @GetMapping("/admin/addAuthor")
-    public String addAuthor(Model model,
-                            HttpSession session) {
-        Author author = (Author) session.getAttribute("author");
-        if (author == null){
-            author = new Author();
-        }
-        session.setAttribute("author", author);
+    public String addAuthor(Model model) {
+        Author author = new Author();
         model.addAttribute("books", bookService.findAll());
         model.addAttribute("author", author);
         return "admin/formNewAuthor";
@@ -94,25 +74,78 @@ public class AuthorController {
 
     @PostMapping("/admin/addAuthor")
     public String saveAuthor(@ModelAttribute("author") Author author,
+                             @RequestParam(value = "bookIds", required = false) String bookIds,
+                             @RequestParam("photo") MultipartFile photo,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
-                             @RequestParam("photo") MultipartFile photo,
-                             HttpSession session,
                              Model model) throws IOException {
         if (bindingResult.hasErrors()) {
-            session.setAttribute("author", author);
+            model.addAttribute("errors", bindingResult.getAllErrors());
             model.addAttribute("author", author);
             return "admin/formNewAuthor";
         }
 
-        try {
-        authorService.registerAuthor(author, photo);
+        List<Book> selectedBooks = new ArrayList<>();
+        if (!bookIds.isEmpty()) {
+            selectedBooks = Arrays.stream(bookIds.split(","))
+                    .map(Long::parseLong)
+                    .map(bookService::findById)
+                    .collect(Collectors.toList());
         }
-        catch (IOException e) {
+
+        try {
+            authorService.registerAuthor(author, photo, selectedBooks);
+        } catch (IOException e) {
             return "redirect:/";
         }
-        session.removeAttribute("author");
         redirectAttributes.addFlashAttribute("success", "Autore aggiunto con successo!");
         return "redirect:/author/" + author.getId();
+    }
+
+
+    @GetMapping("/admin/editAuthor/{author_id}")
+    public String editAuthor(Model model,
+                             @PathVariable Long author_id) {
+        Author author = authorService.findById(author_id);
+        model.addAttribute("books", bookService.findAll());
+        model.addAttribute("author", author);
+        return "admin/formEditAuthor";
+    }
+
+
+    @PostMapping("/admin/editAuthor/{author_id}")
+    public String updateAuthor(@ModelAttribute("author") Author author,
+                               @RequestParam("photo") MultipartFile photo,
+                               @RequestParam(value = "bookIds", required = false) String bookIds,
+                               @PathVariable Long author_id,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes,
+                               Model model) throws IOException {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("author", author);
+            return "admin/formEditAuthor";
+        }
+
+        List<Book> selectedBooks = new ArrayList<>();
+        if (!(bookIds == null || bookIds.isEmpty())) {
+            selectedBooks = Arrays.stream(bookIds.split(","))
+                    .map(Long::parseLong)
+                    .map(bookService::findById)
+                    .collect(Collectors.toList());
+        }
+        Author author1 = authorService.findById(author_id);
+
+        author1.setName(author.getName());
+        author1.setSurname(author.getSurname());
+        author1.setDateOfBirth(author.getDateOfBirth());
+        author1.setDateOfDeath(author.getDateOfDeath());
+        try {
+            authorService.registerAuthor(author1, photo, selectedBooks);
+        } catch (IOException e) {
+            return "redirect:/";
+        }
+        redirectAttributes.addFlashAttribute("success", "Autore modificato con successo!");
+        return "redirect:/author/" + author_id;
     }
 }

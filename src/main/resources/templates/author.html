@@ -16,6 +16,7 @@
 
 <!-- Dettagli dell'autore -->
 <div id="app" class="author-details container mt-4">
+    <button><a th:href="'/admin/editAuthor/'+${author.id}">Modifica</a></button>
     <h1 th:text="${author.name} + ' ' + ${author.surname}">Nome Autore</h1>
 
     <p th:if="${author.dateOfDeath != null}">

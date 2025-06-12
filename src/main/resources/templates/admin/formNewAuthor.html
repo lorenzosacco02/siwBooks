@@ -74,32 +74,22 @@
             </div>
 
             <!-- Libri scritti -->
-            <div class="mb-3">
-              <label class="form-label">Seleziona i libri scritti dall'autore</label>
-              <input type="hidden" class="form-select" th:field="*{written}" id="books">
+            <input type="hidden" name="bookIds" id="bookIds" />
 
-              <div class="dropdown mb-3">
-                <button class="btn btn-secondary dropdown-toggle"
-                        type="button"
-                        id="bookDropdown"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                  Seleziona un libro
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="bookDropdown">
-                  <li th:each="book : ${books}">
-                    <a class="dropdown-item"
-                       th:href="@{'/admin/formNewAuthor/addBook/' + ${book.id}}"
-                       th:text="${book.title}"></a>
-                  </li>
-                  <li th:if="${#lists.isEmpty(books)}">
-                    <span class="dropdown-item-text text-muted">Nessun libro disponibile</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div th:each="writ : *{written}" th:text="${writ.title}">Libro selezionato</div>
+            <!-- Dropdown per selezionare i libri -->
+            <div class="dropdown mb-3">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="bookDropdown" data-bs-toggle="dropdown">
+                Seleziona un libro
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="bookDropdown" id="bookList">
+                <li th:each="book : ${books}">
+                  <a class="dropdown-item" href="#" th:attr="data-id=${book.id}" th:text="${book.title}"></a>
+                </li>
+              </ul>
             </div>
+
+            <!-- Visualizzazione dei libri selezionati -->
+            <ul class="list-group mb-3" id="selectedBooksList"></ul>
 
             <!-- Pulsante submit -->
             <div class="d-grid">
@@ -169,6 +159,55 @@
     });
   });
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const bookList = document.getElementById("bookList");
+    const selectedBooksList = document.getElementById("selectedBooksList");
+    const bookIdsInput = document.getElementById("bookIds");
+
+    const selectedBooks = new Map(); // id -> titolo
+
+    bookList.addEventListener("click", function (e) {
+      e.preventDefault();
+      const target = e.target;
+      if (target && target.dataset.id) {
+        const id = target.dataset.id;
+        const title = target.textContent;
+
+        if (!selectedBooks.has(id)) {
+          selectedBooks.set(id, title);
+          updateSelectedBooks();
+        }
+      }
+    });
+
+
+    function updateSelectedBooks() {
+      selectedBooksList.innerHTML = "";
+      selectedBooks.forEach((title, id) => {
+        const li = document.createElement("li");
+        li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+        li.textContent = title;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.classList.add("btn", "btn-sm", "btn-danger");
+        removeBtn.textContent = "Rimuovi";
+        removeBtn.onclick = () => {
+          selectedBooks.delete(id);
+          updateSelectedBooks();
+        };
+
+        li.appendChild(removeBtn);
+        selectedBooksList.appendChild(li);
+      });
+
+      // Aggiorna l’input nascosto con gli ID
+      bookIdsInput.value = Array.from(selectedBooks.keys()).join(",");
+    }
+  });
+</script>
+
 
 
 </body>

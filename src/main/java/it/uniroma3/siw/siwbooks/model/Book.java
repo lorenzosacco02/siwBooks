@@ -22,7 +22,7 @@ public class Book {
     @OneToOne
     private Image cover;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id")
     @Column(name = "images")
     private List<Image> images = new ArrayList<>();
