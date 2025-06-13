@@ -15,6 +15,9 @@ public interface BookRepository extends CrudRepository<Book, Long> {
     @Query(value = "DELETE FROM book_authors WHERE authors_id = :authors_id AND written_id = :written_id", nativeQuery = true)
     void deleteBookFromAuthor(@Param("written_id") Long written_id, @Param("authors_id") Long authors_id);
 
+    @Modifying
+    @Query(value = "DELETE FROM book_authors WHERE written_id = :written_id", nativeQuery = true)
+    void deleteAllAuthorFromBook(@Param("written_id") Long written_id);
 
 }
 

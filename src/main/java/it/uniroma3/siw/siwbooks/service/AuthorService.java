@@ -34,6 +34,7 @@ public class AuthorService {
 
     @Transactional
     public void deleteAuthor(Long id) {
+        authorRepository.deleteAllBookFromAuthor(id);
         authorRepository.deleteById(id);
     }
 

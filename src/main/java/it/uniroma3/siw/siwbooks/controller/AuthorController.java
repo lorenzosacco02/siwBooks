@@ -156,4 +156,10 @@ public class AuthorController {
         authorService.removeBook(author_id, book_id);
         return "redirect:/admin/editAuthor/" + author_id;
     }
+
+    @GetMapping("admin/deleteAuthor/{author_id}")
+    public String removeAuthor(@PathVariable Long author_id) {
+        authorService.deleteAuthor(author_id);
+        return "redirect:/authors";
+    }
 }
