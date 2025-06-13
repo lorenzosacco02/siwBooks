@@ -100,4 +100,10 @@ public class ReviewController {
         return "redirect:/book/" + bookId;
     }
 
+    @GetMapping("admin/book/{book_id}/deleteReview/{review_id}")
+    public String deleteReview(@PathVariable("review_id") Long review_id,
+                               @PathVariable("book_id") Long book_id){
+        reviewService.deleteReview(review_id);
+        return "redirect:/book/" + book_id;
+    }
 }

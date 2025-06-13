@@ -188,4 +188,16 @@ public class BookController {
         bookService.deleteBook(book_id);
         return "redirect:/books";
     }
+
+    @GetMapping("/admin/editBook/deletePhoto/{book_id}")
+    public String removePhoto(@PathVariable Long book_id,
+                              Model model) {
+        Book book = bookService.findById(book_id);
+        Long image_id = book.getCover().getId();
+        book.setCover(null);
+        imageService.deleteImage(image_id);
+        model.addAttribute("authors", authorService.findAll());
+        model.addAttribute("book", book);
+        return "redirect:/admin/editBook/" + book_id;
+    }
 }

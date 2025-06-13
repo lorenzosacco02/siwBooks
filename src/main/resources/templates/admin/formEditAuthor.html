@@ -39,6 +39,12 @@
                             <label class="form-label">Foto autore</label>
                             <input type="file" id="photo" name="photo" class="form-control" />
                         </div>
+                        <!-- Bottone per eliminare la foto -->
+                        <div class="mt-2">
+                            <a th:if="${author.image != null}" th:href="@{'/admin/editAuthor/deletePhoto/' + ${author.id}}" class="btn btn-outline-danger btn-sm">
+                                Elimina foto
+                            </a>
+                        </div>
 
                         <!-- Anteprima immagine -->
                         <div class="mb-3">

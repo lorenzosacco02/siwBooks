@@ -162,4 +162,16 @@ public class AuthorController {
         authorService.deleteAuthor(author_id);
         return "redirect:/authors";
     }
+
+    @GetMapping("/admin/editAuthor/deletePhoto/{author_id}")
+    public String removePhoto(@PathVariable Long author_id,
+                              Model model) {
+        Author author = authorService.findById(author_id);
+        Long image_id = author.getImage().getId();
+        author.setImage(null);
+        imageService.deleteImage(image_id);
+        model.addAttribute("books", bookService.findAll());
+        model.addAttribute("author", author);
+        return "redirect:/admin/editAuthor/" + author_id;
+    }
 }

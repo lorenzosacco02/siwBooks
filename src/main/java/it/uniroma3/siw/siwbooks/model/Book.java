@@ -19,7 +19,7 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Image cover;
 
     @OneToMany(cascade = CascadeType.ALL)

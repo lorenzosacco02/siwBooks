@@ -70,6 +70,11 @@
                     Modifica
                 </a>
             </div>
+            <div th:if="${userDetails != null and isAdmin}">
+                <a th:href="@{'/admin/book/' + ${book.id} + '/deleteReview/' + ${review.id}}" class="btn btn-sm btn-warning">
+                    Elimina
+                </a>
+            </div>
         </div>
     </div>
 </div>

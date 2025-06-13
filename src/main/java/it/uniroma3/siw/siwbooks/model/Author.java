@@ -28,7 +28,7 @@ public class Author {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfDeath;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Image image;
 
     @ManyToMany(mappedBy="authors")

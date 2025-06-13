@@ -35,6 +35,12 @@
                             <label class="form-label">Copertina del libro</label>
                             <input type="file" id="photo" name="photo" class="form-control" />
                         </div>
+                        <!-- Bottone per eliminare la cover -->
+                        <div class="mt-2">
+                            <a th:if="${book.cover != null}" th:href="@{'/admin/editBook/deletePhoto/' + ${book.id}}" class="btn btn-outline-danger btn-sm">
+                                Elimina copertina
+                            </a>
+                        </div>
 
                         <div class="mb-3">
                             <label for="images" class="form-label">Altre immagini del libro</label>
