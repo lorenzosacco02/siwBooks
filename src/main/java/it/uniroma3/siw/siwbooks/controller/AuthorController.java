@@ -148,4 +148,12 @@ public class AuthorController {
         redirectAttributes.addFlashAttribute("success", "Autore modificato con successo!");
         return "redirect:/author/" + author_id;
     }
+
+    @GetMapping("admin/editAuthor/{author_id}/deleteBook/{book_id}")
+    public String removeBookFromAuthor(@PathVariable Long author_id,
+                                       @PathVariable Long book_id,
+                                       Model model) {
+        authorService.removeBook(author_id, book_id);
+        return "redirect:/admin/editAuthor/" + author_id;
+    }
 }

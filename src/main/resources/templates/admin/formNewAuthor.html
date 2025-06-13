@@ -82,12 +82,14 @@
                 Seleziona un libro
               </button>
               <ul class="dropdown-menu" aria-labelledby="bookDropdown" id="bookList">
-                <li th:each="book : ${books}">
-                  <a class="dropdown-item" href="#" th:attr="data-id=${book.id}" th:text="${book.title}"></a>
+                <li th:each="book : ${books}"
+                    th:if="${author.written == null or !author.written.contains(book)}">
+                  <a class="dropdown-item" href="#"
+                     th:attr="data-id=${book.id}"
+                     th:text="${book.title}"></a>
                 </li>
               </ul>
             </div>
-
             <!-- Visualizzazione dei libri selezionati -->
             <ul class="list-group mb-3" id="selectedBooksList"></ul>
 
@@ -162,50 +164,62 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const bookList = document.getElementById("bookList");
-    const selectedBooksList = document.getElementById("selectedBooksList");
-    const bookIdsInput = document.getElementById("bookIds");
+  const bookList = document.getElementById("bookList");
+  const selectedBooksList = document.getElementById("selectedBooksList");
+  const bookIdsInput = document.getElementById("bookIds");
 
-    const selectedBooks = new Map(); // id -> titolo
+  const selectedBooks = new Map(); // id -> titolo
 
-    bookList.addEventListener("click", function (e) {
-      e.preventDefault();
-      const target = e.target;
-      if (target && target.dataset.id) {
-        const id = target.dataset.id;
-        const title = target.textContent;
+  bookList.addEventListener("click", function (e) {
+  e.preventDefault();
+  const target = e.target;
+  if (target && target.dataset.id) {
+  const id = target.dataset.id;
+  const title = target.textContent;
 
-        if (!selectedBooks.has(id)) {
-          selectedBooks.set(id, title);
-          updateSelectedBooks();
-        }
-      }
-    });
+  if (!selectedBooks.has(id)) {
+  selectedBooks.set(id, title);
+  updateSelectedBooks();
 
+  // Rimuove il libro selezionato dal menu dropdown
+  target.parentElement.remove();
+}
+}
+});
 
-    function updateSelectedBooks() {
-      selectedBooksList.innerHTML = "";
-      selectedBooks.forEach((title, id) => {
-        const li = document.createElement("li");
-        li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
-        li.textContent = title;
+  function updateSelectedBooks() {
+  selectedBooksList.innerHTML = "";
+  selectedBooks.forEach((title, id) => {
+  const li = document.createElement("li");
+  li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+  li.textContent = title;
 
-        const removeBtn = document.createElement("button");
-        removeBtn.classList.add("btn", "btn-sm", "btn-danger");
-        removeBtn.textContent = "Rimuovi";
-        removeBtn.onclick = () => {
-          selectedBooks.delete(id);
-          updateSelectedBooks();
-        };
+  const removeBtn = document.createElement("button");
+  removeBtn.classList.add("btn", "btn-sm", "btn-danger");
+  removeBtn.textContent = "Rimuovi";
+  removeBtn.onclick = () => {
+  selectedBooks.delete(id);
+  updateSelectedBooks();
 
-        li.appendChild(removeBtn);
-        selectedBooksList.appendChild(li);
-      });
+  // Ricrea il menu item nel dropdown
+  const liDropdown = document.createElement("li");
+  const a = document.createElement("a");
+  a.classList.add("dropdown-item");
+  a.href = "#";
+  a.dataset.id = id;
+  a.textContent = title;
+  liDropdown.appendChild(a);
+  bookList.appendChild(liDropdown);
+};
 
-      // Aggiorna l’input nascosto con gli ID
-      bookIdsInput.value = Array.from(selectedBooks.keys()).join(",");
-    }
-  });
+  li.appendChild(removeBtn);
+  selectedBooksList.appendChild(li);
+});
+
+  // Aggiorna l’input nascosto con gli ID selezionati
+  bookIdsInput.value = Array.from(selectedBooks.keys()).join(",");
+}
+});
 </script>
 
 

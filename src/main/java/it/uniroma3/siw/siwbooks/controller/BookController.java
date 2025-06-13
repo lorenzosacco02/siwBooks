@@ -89,7 +89,6 @@ public class BookController {
 
     @GetMapping("/admin/addBook")
     public String addBook(Model model) {
-        Book book = new Book();
         model.addAttribute("authors", authorService.findAll());
         model.addAttribute("book", new Book());
         return "admin/formNewBook";
@@ -130,4 +129,57 @@ public class BookController {
         return "redirect:/book/" + book.getId();
     }
 
+    @GetMapping("/admin/editBook/{book_id}")
+    public String editAuthor(Model model,
+                             @PathVariable Long book_id) {
+        model.addAttribute("authors", authorService.findAll());
+        model.addAttribute("book", bookService.findById(book_id));
+        return "admin/formEditBook";
+    }
+
+
+    @PostMapping("/admin/editBook/{book_id}")
+    public String updateAuthor(@ModelAttribute("book") Book book,
+                               @RequestParam("photo") MultipartFile photo,
+                               @RequestParam("images") MultipartFile[] images,
+                               @RequestParam(value = "authorIds", required = false) String authorIds,
+                               @PathVariable Long book_id,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes,
+                               Model model) throws IOException {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("book", book);
+            return "admin/formEditBook";
+        }
+
+        List<Author> selectedAuthors = new ArrayList<>();
+        if (!authorIds.isEmpty()) {
+            selectedAuthors = Arrays.stream(authorIds.split(","))
+                    .map(Long::parseLong)
+                    .map(authorService::findById)
+                    .collect(Collectors.toList());
+        }
+        Book book1 = bookService.findById(book_id);
+
+        book1.setTitle(book.getTitle());
+        book1.setPublicationYear(book.getPublicationYear());
+
+        try {
+            bookService.registerBook(book1, photo, images, selectedAuthors);
+        } catch (IOException e) {
+            return "redirect:/";
+        }
+        redirectAttributes.addFlashAttribute("success", "Autore modificato con successo!");
+        return "redirect:/book/" + book_id;
+    }
+
+
+    @GetMapping("admin/editBook/{book_id}/deleteAuthor/{author_id}")
+    public String removeBookFromAuthor(@PathVariable Long author_id,
+                                       @PathVariable Long book_id,
+                                       Model model) {
+        bookService.removeAuthor(book_id, author_id);
+        return "redirect:/admin/editBook/" + book_id;
+    }
 }

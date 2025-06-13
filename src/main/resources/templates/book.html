@@ -15,6 +15,7 @@
 
 <!-- Dettagli del libro -->
 <div id="app" class="book-details">
+    <button><a th:href="'/admin/editBook/'+${book.id}">Modifica</a></button>
     <h1 th:text="${book.title}">Titolo del libro</h1>
 
     <p><strong>Anno di pubblicazione:</strong> <span th:text="${book.publicationYear}">2025</span></p>

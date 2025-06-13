@@ -143,28 +143,30 @@
   document.addEventListener("DOMContentLoaded", function () {
     const authorList = document.getElementById("authorList");
     const selectedAuthorList = document.getElementById("selectedAuthorList");
-    const authorIdsList = document.getElementById("authorIds");
+    const authorIdsInput = document.getElementById("authorIds");
 
-    const slectedAuthors = new Map(); // id -> titolo
+    const selectedAuthors = new Map(); // id -> titolo
 
     authorList.addEventListener("click", function (e) {
       e.preventDefault();
       const target = e.target;
       if (target && target.dataset.id) {
         const id = target.dataset.id;
-        const title = target.textContent;
+        const name = target.textContent;
 
-        if (!slectedAuthors.has(id)) {
-          slectedAuthors.set(id, title);
-          updateSelectedBooks();
+        if (!selectedAuthors.has(id)) {
+          selectedAuthors.set(id, name);
+          updateSelectedAuthors();
+
+          // Rimuove il libro selezionato dal menu dropdown
+          target.parentElement.remove();
         }
       }
     });
 
-
-    function updateSelectedBooks() {
+    function updateSelectedAuthors() {
       selectedAuthorList.innerHTML = "";
-      slectedAuthors.forEach((name, id) => {
+      selectedAuthors.forEach((name, id) => {
         const li = document.createElement("li");
         li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
         li.textContent = name;
@@ -173,16 +175,26 @@
         removeBtn.classList.add("btn", "btn-sm", "btn-danger");
         removeBtn.textContent = "Rimuovi";
         removeBtn.onclick = () => {
-          slectedAuthors.delete(id);
-          updateSelectedBooks();
+          selectedAuthors.delete(id);
+          updateSelectedAuthors();
+
+          // Ricrea il menu item nel dropdown
+          const liDropdown = document.createElement("li");
+          const a = document.createElement("a");
+          a.classList.add("dropdown-item");
+          a.href = "#";
+          a.dataset.id = id;
+          a.textContent = name;
+          liDropdown.appendChild(a);
+          authorList.appendChild(liDropdown);
         };
 
         li.appendChild(removeBtn);
         selectedAuthorList.appendChild(li);
       });
 
-      // Aggiorna l’input nascosto con gli ID
-      authorIdsList.value = Array.from(slectedAuthors.keys()).join(",");
+      // Aggiorna l’input nascosto con gli ID selezionati
+      authorIdsInput.value = Array.from(selectedAuthors.keys()).join(",");
     }
   });
 </script>

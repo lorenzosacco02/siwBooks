@@ -33,6 +33,17 @@ public class AuthorService {
     }
 
     @Transactional
+    public void deleteAuthor(Long id) {
+        authorRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void removeBook(Long author_id, Long book_id) {
+        authorRepository.deleteBookFromAuthor(author_id, book_id);
+        this.save(this.findById(author_id));
+    }
+
+    @Transactional
     public Iterable<Author> findAll() {
         return authorRepository.findAll();
     }

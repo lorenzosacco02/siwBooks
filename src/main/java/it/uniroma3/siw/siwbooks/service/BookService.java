@@ -36,6 +36,12 @@ public class BookService {
     }
 
     @Transactional
+    public void removeAuthor(Long bookId, Long authorId) {
+        bookRepository.deleteBookFromAuthor(bookId, authorId);
+        this.save(findById(bookId));
+    }
+
+    @Transactional
     public List<Book> searchByTitle(String title) {
         return bookRepository.findByTitleContainingIgnoreCase(title);
     }
