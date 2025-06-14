@@ -26,4 +26,11 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
     @Query(value = "DELETE FROM book_authors WHERE authors_id = :authors_id", nativeQuery = true)
     void deleteAllBookFromAuthor(@Param("authors_id") Long authors_id);
 
+    @Query("SELECT a FROM Author a WHERE LOWER(REPLACE(CONCAT(a.surname, a.name), ' ', '')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), ' ', ''))")
+    List<Author> searchByFullName(@Param("query") String query);
+
+    @Query("SELECT a FROM Author a WHERE LOWER(REPLACE(CONCAT(a.name, a.surname), ' ', '')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), ' ', ''))")
+    List<Author> searchByFullNameReverse(@Param("query") String query);
+
+    List<Author> findByNameIgnoreCase(String name);
 }

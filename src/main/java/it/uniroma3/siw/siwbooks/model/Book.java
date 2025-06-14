@@ -1,7 +1,12 @@
 package it.uniroma3.siw.siwbooks.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,9 +19,13 @@ public class Book {
     private Long id;
 
     @Column(nullable = false)
+    @Min(value= 0, message = "L'anno di Pubblicazione deve essere positivo")
+    @Max(value = 2025, message = "L'Anno di Pubblicazione deve essere uguale o precedente a quello attuale")
+    @NotNull(message = "Specifica un Anno di Pubblicazione")
     private Integer publicationYear;
 
     @Column(nullable = false)
+    @NotBlank(message = "Specifica il Titolo")
     private String title;
 
     @OneToOne(cascade = CascadeType.REMOVE)

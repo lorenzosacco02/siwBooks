@@ -63,7 +63,7 @@ public class ReviewController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("book", book);
             model.addAttribute("reviews", reviewService.getReviewsForBook(book));
-            return "/book"+bookId;
+            return "/formNewReview";
         }
         User currentUser = userService.getCurrentUser();
         if (reviewService.userHasAlreadyReviewed(book, currentUser)) {
@@ -84,7 +84,7 @@ public class ReviewController {
                                @PathVariable("review_id") Long reviewId,
                                Model model) {
         Review review = reviewService.findById(reviewId);
-        if(userService.getCurrentUser() == review.getAuthor()){
+        if (userService.getCurrentUser() == review.getAuthor()) {
             model.addAttribute("review", review);
             model.addAttribute("book", bookService.findById(bookId));
             return "formModifyReview";
@@ -95,14 +95,23 @@ public class ReviewController {
     @PostMapping("/book/{book_id}/updateReview/{review_id}")
     public String updateReview(@PathVariable("book_id") Long bookId,
                                @PathVariable("review_id") Long reviewId,
-                               @ModelAttribute("review") Review updatedReview) {
+                               @Valid @ModelAttribute("review") Review updatedReview,
+                               BindingResult bindingResult,
+                               Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("review_id", reviewId);
+            model.addAttribute("review", updatedReview);
+            model.addAttribute("book", bookService.findById(bookId));
+            return "formModifyReview";
+        }
         reviewService.update(reviewId, updatedReview.getTitle(), updatedReview.getText(), updatedReview.getRating());
         return "redirect:/book/" + bookId;
     }
 
     @GetMapping("admin/book/{book_id}/deleteReview/{review_id}")
     public String deleteReview(@PathVariable("review_id") Long review_id,
-                               @PathVariable("book_id") Long book_id){
+                               @PathVariable("book_id") Long book_id) {
         reviewService.deleteReview(review_id);
         return "redirect:/book/" + book_id;
     }

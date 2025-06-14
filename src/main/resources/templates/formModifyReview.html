@@ -18,30 +18,32 @@
 <div class="container mt-5">
     <h2>Aggiungi una recensione</h2>
 
-    <form th:action="@{'/book/' + ${book.id} + '/updateReview/'+ ${review.id} }" th:object="${review}" method="post" class="mt-4">
+    <form th:action="@{'/book/' + ${book.id} + '/updateReview/'+ ${review_id} }" th:object="${review}" method="post" class="mt-4">
 
         <!-- Campo testo recensione -->
         <div class="mb-3">
             <label for="title" class="form-label">Titolo</label>
-            <textarea th:field="*{title}" class="form-control" id="title" rows="1" required></textarea>
+            <textarea th:field="*{title}" class="form-control" id="title" rows="1"></textarea>
+            <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
         </div>
 
         <!-- Campo testo recensione -->
         <div class="mb-3">
             <label for="content" class="form-label">Recensione</label>
-            <textarea th:field="*{text}" class="form-control" id="content" rows="4" required></textarea>
+            <textarea th:field="*{text}" class="form-control" id="content" rows="4"></textarea>
         </div>
 
         <!-- Campo voto -->
         <div class="mb-3">
             <label for="rating" class="form-label">Voto</label>
-            <select th:field="*{rating}" class="form-select" id="rating" required>
+            <select th:field="*{rating}" class="form-select" id="rating">
                 <option th:value="1">1</option>
                 <option th:value="2">2</option>
                 <option th:value="3">3</option>
                 <option th:value="4">4</option>
                 <option th:value="5">5</option>
             </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></div>
         </div>
 
         <!-- Pulsante di invio -->

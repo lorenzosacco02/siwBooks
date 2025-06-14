@@ -49,7 +49,7 @@ public class BookService {
 
     @Transactional
     public List<Book> searchByTitle(String title) {
-        return bookRepository.findByTitleContainingIgnoreCase(title);
+        return bookRepository.searchByTitleIgnoringSpaces(title);
     }
 
     @Transactional
@@ -80,5 +80,15 @@ public class BookService {
         }
 
         this.save(book);
+    }
+
+    public boolean bookExistsByNameAndPublicationYear(String title, Integer publicationYear) {
+        List<Book> books = bookRepository.searchByTitleIgnoringSpaces(title);
+        for (Book book : books) {
+            if (book.getPublicationYear().equals(publicationYear)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -32,16 +32,24 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <form id="autoreForm" th:action="@{'/admin/editAuthor/'+${author.id}}" th:object="${author}" method="post" enctype="multipart/form-data">
+                    <form id="autoreForm" th:action="@{'/admin/editAuthor/'+${author.id}}" th:object="${author}"
+                          method="post" enctype="multipart/form-data">
+
+                        <!-- Errore Autore Duplicato-->
+                        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+                        </div>
 
                         <!-- Foto autore -->
                         <div class="mb-3">
                             <label class="form-label">Foto autore</label>
-                            <input type="file" id="photo" name="photo" class="form-control" />
+                            <input type="file" id="photo" name="photo" class="form-control"/>
                         </div>
                         <!-- Bottone per eliminare la foto -->
                         <div class="mt-2">
-                            <a th:if="${author.image != null}" th:href="@{'/admin/editAuthor/deletePhoto/' + ${author.id}}" class="btn btn-outline-danger btn-sm">
+                            <a th:if="${author.image != null}"
+                               th:href="@{'/admin/editAuthor/deletePhoto/' + ${author.id}}"
+                               class="btn btn-outline-danger btn-sm">
                                 Elimina foto
                             </a>
                         </div>
@@ -50,48 +58,58 @@
                         <div class="mb-3">
                             <label class="form-label">Anteprima:</label>
                             <div>
-                                <img id="photoPreview" src="#" alt="Anteprima immagine" class="img-thumbnail" style="display:none; max-width: 200px;">
+                                <img id="photoPreview" src="#" alt="Anteprima immagine" class="img-thumbnail"
+                                     style="display:none; max-width: 200px;">
                             </div>
                         </div>
 
                         <!-- Nome -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                            <input type="text" class="form-control" id="name" th:field="*{name}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                         </div>
 
                         <!-- Cognome -->
                         <div class="mb-3">
                             <label for="surname" class="form-label">Cognome</label>
-                            <input type="text" class="form-control" id="surname" th:field="*{surname}" required>
+                            <input type="text" class="form-control" id="surname" th:field="*{surname}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('surname')}"
+                                 th:errors="*{surname}"></div>
                         </div>
 
                         <!-- Data di nascita -->
                         <div class="mb-3">
                             <label class="form-label">Data di nascita</label>
-                            <input type="date" class="form-control" th:field="*{dateOfBirth}" required>
-                            <div class="text-danger" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+                            <input type="date" class="form-control" th:field="*{dateOfBirth}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('dateOfBirth')}"
+                                 th:errors="*{dateOfBirth}"></div>
                         </div>
 
                         <!-- Data di morte -->
                         <div class="mb-3">
                             <label class="form-label">Data di morte (opzionale)</label>
                             <input type="date" class="form-control" th:field="*{dateOfDeath}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('dateOfDeath')}"
+                                 th:errors="*{dateOfDeath}"></div>
                         </div>
 
                         <!-- Nazionalità  -->
                         <div class="mb-3">
                             <label class="form-label">Nazionalit&agrave</label>
-                            <input type="text" class="form-control" th:field="*{nationality}" required>
+                            <input type="text" class="form-control" th:field="*{nationality}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('nationality')}"
+                                 th:errors="*{nationality}"></div>
                         </div>
 
                         <!-- Libri scritti -->
-                        <input type="hidden" name="bookIds" id="bookIds" />
+                        <input type="hidden" name="bookIds" id="bookIds"/>
 
                         <!-- Dropdown per selezionare i libri -->
                         <div class="dropdown mb-3">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="bookDropdown" data-bs-toggle="dropdown">
-                                Seleziona un libro da aggiungere
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="bookDropdown"
+                                    data-bs-toggle="dropdown">
+                                Seleziona un libro da Aggiungere
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="bookDropdown" id="bookList">
                                 <li th:each="book : ${books}"
@@ -146,7 +164,7 @@
 
 <!-- Anteprima immagine -->
 <script>
-    document.getElementById('photo').addEventListener('change', function(event) {
+    document.getElementById('photo').addEventListener('change', function (event) {
         const input = event.target;
         const preview = document.getElementById('photoPreview');
 

@@ -1,12 +1,15 @@
 package it.uniroma3.siw.siwbooks.controller;
 
+import it.uniroma3.siw.siwbooks.controller.validator.AuthorValidator;
 import it.uniroma3.siw.siwbooks.model.Author;
 import it.uniroma3.siw.siwbooks.model.Book;
 import it.uniroma3.siw.siwbooks.model.Image;
+import it.uniroma3.siw.siwbooks.repository.AuthorRepository;
 import it.uniroma3.siw.siwbooks.service.AuthorService;
 import it.uniroma3.siw.siwbooks.service.BookService;
 import it.uniroma3.siw.siwbooks.service.ImageService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,6 +38,8 @@ public class AuthorController {
     private AuthorService authorService;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private AuthorValidator authorValidator;
 
     @GetMapping("/author/{author_id}/image")
     public ResponseEntity<byte[]> getImage(@PathVariable Long author_id) {
@@ -73,14 +78,15 @@ public class AuthorController {
 
 
     @PostMapping("/admin/addAuthor")
-    public String saveAuthor(@ModelAttribute("author") Author author,
+    public String saveAuthor(@Valid @ModelAttribute("author") Author author,
+                             BindingResult bindingResult,
                              @RequestParam(value = "bookIds", required = false) String bookIds,
                              @RequestParam("photo") MultipartFile photo,
-                             BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
                              Model model) throws IOException {
+        authorValidator.validate(author, bindingResult);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("books", bookService.findAll());
             model.addAttribute("author", author);
             return "admin/formNewAuthor";
         }
@@ -114,15 +120,22 @@ public class AuthorController {
 
 
     @PostMapping("/admin/editAuthor/{author_id}")
-    public String updateAuthor(@ModelAttribute("author") Author author,
+    public String updateAuthor(@Valid @ModelAttribute("author") Author author,
+                               BindingResult bindingResult,
                                @RequestParam("photo") MultipartFile photo,
                                @RequestParam(value = "bookIds", required = false) String bookIds,
                                @PathVariable Long author_id,
-                               BindingResult bindingResult,
                                RedirectAttributes redirectAttributes,
                                Model model) throws IOException {
+
+        Author author1 = authorService.findById(author_id);
+
+        if(author.getName()!= null && author.getSurname() != null && author.getDateOfBirth() != null && author.getDateOfBirth().equals(author1.getDateOfBirth()) && !author.getName().equals(author1.getName()) && !author.getSurname().equals(author1.getSurname())) {
+            authorValidator.validate(author, bindingResult);
+        }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("author_id", author_id);
+            model.addAttribute("books", bookService.findAll());
             model.addAttribute("author", author);
             return "admin/formEditAuthor";
         }
@@ -134,8 +147,6 @@ public class AuthorController {
                     .map(bookService::findById)
                     .collect(Collectors.toList());
         }
-        Author author1 = authorService.findById(author_id);
-
         author1.setName(author.getName());
         author1.setSurname(author.getSurname());
         author1.setDateOfBirth(author.getDateOfBirth());

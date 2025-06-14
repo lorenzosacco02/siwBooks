@@ -56,8 +56,8 @@ public class AuthorService {
 
     @Transactional
     public List<Author> searchByNameOrSurname(String name) {
-        List<Author> authors = authorRepository.findByNameStartingWithIgnoreCase(name);
-        authors.addAll(authorRepository.findBySurnameStartingWithIgnoreCase(name));
+        List<Author> authors = authorRepository.searchByFullNameReverse(name);
+        authors.addAll(authorRepository.searchByFullName(name));
         Set<Author> set = new LinkedHashSet<>(authors); // mantiene l'ordine
         authors = new ArrayList<>(set);
         return authors;
@@ -99,4 +99,15 @@ public class AuthorService {
 
         this.save(author);
     }
+
+    public boolean authorExistsByNameAndLastNameAndDateOfBirth(String name, String surname, LocalDate dateOfBirth) {
+        List<Author> authors = authorRepository.findByNameIgnoreCase(name);
+        for (Author author : authors) {
+            if (author.getDateOfBirth() != null && author.getDateOfBirth().isEqual(dateOfBirth) && author.getSurname() != null && author.getSurname().equalsIgnoreCase(surname)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

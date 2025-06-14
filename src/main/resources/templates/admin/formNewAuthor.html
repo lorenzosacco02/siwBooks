@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Home</title>
+    <meta charset="UTF-8">
+    <title>Admin Home</title>
 
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- CSS personalizzato -->
-  <link rel="stylesheet" th:href="@{/css/style.css}">
-  <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <!-- CSS personalizzato -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
 </head>
 
 <body>
@@ -17,101 +17,120 @@
 <div th:replace="~{fragments/navbar :: navbar('authors', 'Cerca Autore ...')}"></div>
 
 <div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-      <!-- Messaggio di successo -->
-      <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <span th:text="${success}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+            <!-- Messaggio di successo -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
 
-      <div class="card shadow-lg rounded-4 border-0">
-        <div class="card-header bg-primary text-white rounded-top-4">
-          <h4 class="mb-0">Aggiungi un nuovo autore</h4>
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <h4 class="mb-0">Aggiungi un nuovo autore</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <form id="autoreForm" th:action="@{/admin/addAuthor}" th:object="${author}" method="post"
+                          enctype="multipart/form-data">
+
+                        <!-- Errore Autore Duplicato-->
+                        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+                        </div>
+
+                        <!-- Foto autore -->
+                        <div class="mb-3">
+                            <label class="form-label">Foto autore</label>
+                            <input type="file" id="photo" name="photo" class="form-control"/>
+                        </div>
+
+                        <!-- Anteprima immagine -->
+                        <div class="mb-3">
+                            <label class="form-label">Anteprima:</label>
+                            <div>
+                                <img id="photoPreview" src="#" alt="Anteprima immagine" class="img-thumbnail"
+                                     style="display:none; max-width: 200px;">
+                            </div>
+                        </div>
+
+                        <!-- Nome -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="name" th:field="*{name}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+
+                        <!-- Cognome -->
+                        <div class="mb-3">
+                            <label for="surname" class="form-label">Cognome</label>
+                            <input type="text" class="form-control" id="surname" th:field="*{surname}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('surname')}"
+                                 th:errors="*{surname}"></div>
+                        </div>
+
+                        <!-- Data di nascita -->
+                        <div class="mb-3">
+                            <label class="form-label">Data di nascita</label>
+                            <input type="date" class="form-control" th:field="*{dateOfBirth}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('dateOfBirth')}"
+                                 th:errors="*{dateOfBirth}"></div>
+                        </div>
+
+                        <!-- Data di morte -->
+                        <div class="mb-3">
+                            <label class="form-label">Data di morte (opzionale)</label>
+                            <input type="date" class="form-control" th:field="*{dateOfDeath}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('dateOfDeath')}"
+                                 th:errors="*{dateOfDeath}"></div>
+                        </div>
+
+                        <!-- Nazionalità  -->
+                        <div class="mb-3">
+                            <label class="form-label">Nazionalit&agrave</label>
+                            <input type="text" class="form-control" th:field="*{nationality}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('nationality')}"
+                                 th:errors="*{nationality}"></div>
+                        </div>
+
+                        <!-- Libri scritti -->
+                        <input type="hidden" name="bookIds" id="bookIds"/>
+
+                        <!-- Dropdown per selezionare i libri -->
+                        <div class="dropdown mb-3">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="bookDropdown"
+                                    data-bs-toggle="dropdown">
+                                Seleziona un libro da Aggiungere
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="bookDropdown" id="bookList">
+                                <li th:each="book : ${books}"
+                                    th:if="${author.written == null or !author.written.contains(book)}">
+                                    <a class="dropdown-item" href="#"
+                                       th:attr="data-id=${book.id}"
+                                       th:text="${book.title}"></a>
+                                </li>
+                            </ul>
+                        </div>
+
+                      <!-- Visualizzazione dei libri selezionati -->
+                      <label class="form-label">Libri Aggiunti</label>
+                      <ul class="list-group mb-3" id="selectedBooksList"></ul>
+
+
+                      <!-- Pulsante submit -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Salva Autore</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/" class="btn btn-outline-secondary">Torna alla home</a>
+            </div>
         </div>
-
-        <div class="card-body p-4">
-          <form id="autoreForm" th:action="@{/admin/addAuthor}" th:object="${author}" method="post" enctype="multipart/form-data">
-
-            <!-- Foto autore -->
-            <div class="mb-3">
-              <label class="form-label">Foto autore</label>
-              <input type="file" id="photo" name="photo" class="form-control" />
-            </div>
-
-            <!-- Anteprima immagine -->
-            <div class="mb-3">
-              <label class="form-label">Anteprima:</label>
-              <div>
-                <img id="photoPreview" src="#" alt="Anteprima immagine" class="img-thumbnail" style="display:none; max-width: 200px;">
-              </div>
-            </div>
-
-            <!-- Nome -->
-            <div class="mb-3">
-              <label for="name" class="form-label">Nome</label>
-              <input type="text" class="form-control" id="name" th:field="*{name}" required>
-            </div>
-
-            <!-- Cognome -->
-            <div class="mb-3">
-              <label for="surname" class="form-label">Cognome</label>
-              <input type="text" class="form-control" id="surname" th:field="*{surname}" required>
-            </div>
-
-            <!-- Data di nascita -->
-            <div class="mb-3">
-              <label class="form-label">Data di nascita</label>
-              <input type="date" class="form-control" th:field="*{dateOfBirth}" required>
-              <div class="text-danger" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
-            </div>
-
-            <!-- Data di morte -->
-            <div class="mb-3">
-              <label class="form-label">Data di morte (opzionale)</label>
-              <input type="date" class="form-control" th:field="*{dateOfDeath}">
-            </div>
-
-            <!-- Nazionalità  -->
-            <div class="mb-3">
-              <label class="form-label">Nazionalit&agrave</label>
-              <input type="text" class="form-control" th:field="*{nationality}" required>
-            </div>
-
-            <!-- Libri scritti -->
-            <input type="hidden" name="bookIds" id="bookIds" />
-
-            <!-- Dropdown per selezionare i libri -->
-            <div class="dropdown mb-3">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="bookDropdown" data-bs-toggle="dropdown">
-                Seleziona un libro
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="bookDropdown" id="bookList">
-                <li th:each="book : ${books}"
-                    th:if="${author.written == null or !author.written.contains(book)}">
-                  <a class="dropdown-item" href="#"
-                     th:attr="data-id=${book.id}"
-                     th:text="${book.title}"></a>
-                </li>
-              </ul>
-            </div>
-            <!-- Visualizzazione dei libri selezionati -->
-            <ul class="list-group mb-3" id="selectedBooksList"></ul>
-
-            <!-- Pulsante submit -->
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary btn-lg">Salva Autore</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div class="text-center mt-4">
-        <a href="/" class="btn btn-outline-secondary">Torna alla home</a>
-      </div>
     </div>
-  </div>
 </div>
 
 <!-- Bootstrap JS -->
@@ -119,115 +138,114 @@
 
 <!-- Anteprima immagine -->
 <script>
-  document.getElementById('photo').addEventListener('change', function(event) {
-    const input = event.target;
-    const preview = document.getElementById('photoPreview');
+    document.getElementById('photo').addEventListener('change', function (event) {
+        const input = event.target;
+        const preview = document.getElementById('photoPreview');
 
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const objectUrl = URL.createObjectURL(file);
-      preview.src = objectUrl;
-      preview.style.display = 'block';
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const objectUrl = URL.createObjectURL(file);
+            preview.src = objectUrl;
+            preview.style.display = 'block';
 
-      preview.onload = () => URL.revokeObjectURL(objectUrl);
-    } else {
-      preview.src = '#';
-      preview.style.display = 'none';
-    }
-  });
+            preview.onload = () => URL.revokeObjectURL(objectUrl);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+        }
+    });
 </script>
 
 <!-- Salvataggio in localStorage -->
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("autoreForm");
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("autoreForm");
 
-    if (!form) return;
+        if (!form) return;
 
-    Array.from(form.elements).forEach(input => {
-      if (!input.name || input.type === "file") return; // IGNORA input file
+        Array.from(form.elements).forEach(input => {
+            if (!input.name || input.type === "file") return; // IGNORA input file
 
-      const key = "form_" + input.name;
-      const saved = localStorage.getItem(key);
-      if (saved) {
-        input.value = saved;
-      }
+            const key = "form_" + input.name;
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                input.value = saved;
+            }
 
-      input.addEventListener("input", () => {
-        localStorage.setItem(key, input.value);
-      });
+            input.addEventListener("input", () => {
+                localStorage.setItem(key, input.value);
+            });
+        });
+
+        form.addEventListener("submit", function () {
+            Array.from(form.elements).forEach(input => {
+                if (input.name && input.type !== "file") {
+                    localStorage.removeItem("form_" + input.name);
+                }
+            });
+        });
     });
-
-    form.addEventListener("submit", function () {
-      Array.from(form.elements).forEach(input => {
-        if (input.name && input.type !== "file") {
-          localStorage.removeItem("form_" + input.name);
-        }
-      });
-    });
-  });
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-  const bookList = document.getElementById("bookList");
-  const selectedBooksList = document.getElementById("selectedBooksList");
-  const bookIdsInput = document.getElementById("bookIds");
+    document.addEventListener("DOMContentLoaded", function () {
+        const bookList = document.getElementById("bookList");
+        const selectedBooksList = document.getElementById("selectedBooksList");
+        const bookIdsInput = document.getElementById("bookIds");
 
-  const selectedBooks = new Map(); // id -> titolo
+        const selectedBooks = new Map(); // id -> titolo
 
-  bookList.addEventListener("click", function (e) {
-  e.preventDefault();
-  const target = e.target;
-  if (target && target.dataset.id) {
-  const id = target.dataset.id;
-  const title = target.textContent;
+        bookList.addEventListener("click", function (e) {
+            e.preventDefault();
+            const target = e.target;
+            if (target && target.dataset.id) {
+                const id = target.dataset.id;
+                const title = target.textContent;
 
-  if (!selectedBooks.has(id)) {
-  selectedBooks.set(id, title);
-  updateSelectedBooks();
+                if (!selectedBooks.has(id)) {
+                    selectedBooks.set(id, title);
+                    updateSelectedBooks();
 
-  // Rimuove il libro selezionato dal menu dropdown
-  target.parentElement.remove();
-}
-}
-});
+                    // Rimuove il libro selezionato dal menu dropdown
+                    target.parentElement.remove();
+                }
+            }
+        });
 
-  function updateSelectedBooks() {
-  selectedBooksList.innerHTML = "";
-  selectedBooks.forEach((title, id) => {
-  const li = document.createElement("li");
-  li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
-  li.textContent = title;
+        function updateSelectedBooks() {
+            selectedBooksList.innerHTML = "";
+            selectedBooks.forEach((title, id) => {
+                const li = document.createElement("li");
+                li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+                li.textContent = title;
 
-  const removeBtn = document.createElement("button");
-  removeBtn.classList.add("btn", "btn-sm", "btn-danger");
-  removeBtn.textContent = "Rimuovi";
-  removeBtn.onclick = () => {
-  selectedBooks.delete(id);
-  updateSelectedBooks();
+                const removeBtn = document.createElement("button");
+                removeBtn.classList.add("btn", "btn-sm", "btn-danger");
+                removeBtn.textContent = "Rimuovi";
+                removeBtn.onclick = () => {
+                    selectedBooks.delete(id);
+                    updateSelectedBooks();
 
-  // Ricrea il menu item nel dropdown
-  const liDropdown = document.createElement("li");
-  const a = document.createElement("a");
-  a.classList.add("dropdown-item");
-  a.href = "#";
-  a.dataset.id = id;
-  a.textContent = title;
-  liDropdown.appendChild(a);
-  bookList.appendChild(liDropdown);
-};
+                    // Ricrea il menu item nel dropdown
+                    const liDropdown = document.createElement("li");
+                    const a = document.createElement("a");
+                    a.classList.add("dropdown-item");
+                    a.href = "#";
+                    a.dataset.id = id;
+                    a.textContent = title;
+                    liDropdown.appendChild(a);
+                    bookList.appendChild(liDropdown);
+                };
 
-  li.appendChild(removeBtn);
-  selectedBooksList.appendChild(li);
-});
+                li.appendChild(removeBtn);
+                selectedBooksList.appendChild(li);
+            });
 
-  // Aggiorna l’input nascosto con gli ID selezionati
-  bookIdsInput.value = Array.from(selectedBooks.keys()).join(",");
-}
-});
+            // Aggiorna l’input nascosto con gli ID selezionati
+            bookIdsInput.value = Array.from(selectedBooks.keys()).join(",");
+        }
+    });
 </script>
-
 
 
 </body>

@@ -1,5 +1,6 @@
 package it.uniroma3.siw.siwbooks.controller;
 
+import it.uniroma3.siw.siwbooks.controller.validator.BookValidator;
 import it.uniroma3.siw.siwbooks.model.Author;
 import it.uniroma3.siw.siwbooks.model.Book;
 import it.uniroma3.siw.siwbooks.model.Image;
@@ -7,6 +8,7 @@ import it.uniroma3.siw.siwbooks.service.AuthorService;
 import it.uniroma3.siw.siwbooks.service.BookService;
 import it.uniroma3.siw.siwbooks.service.ImageService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,8 @@ public class BookController {
     private BookService bookService;
     @Autowired
     private AuthorService authorService;
+    @Autowired
+    private BookValidator bookValidator;
 
 
     @InitBinder
@@ -96,16 +100,16 @@ public class BookController {
 
 
     @PostMapping("/admin/addBook")
-    public String saveBook(@ModelAttribute("book") Book book,
+    public String saveBook(@Valid  @ModelAttribute("book") Book book,
+                           BindingResult bindingResult,
                            @RequestParam(value = "authorIds", required = false) String authorIds,
                            @RequestParam("photo") MultipartFile photo,
                            @RequestParam("images") MultipartFile[] images,
-                           BindingResult bindingResult,
                            RedirectAttributes redirectAttributes,
                            Model model) throws IOException {
-
+        bookValidator.validate(book, bindingResult);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("authors", authorService.findAll());
             model.addAttribute("book", book);
             return "admin/formNewBook";
         }
@@ -139,16 +143,22 @@ public class BookController {
 
 
     @PostMapping("/admin/editBook/{book_id}")
-    public String updateAuthor(@ModelAttribute("book") Book book,
+    public String updateAuthor(@Valid @ModelAttribute("book") Book book,
+                               BindingResult bindingResult,
                                @RequestParam("photo") MultipartFile photo,
                                @RequestParam("images") MultipartFile[] images,
                                @RequestParam(value = "authorIds", required = false) String authorIds,
                                @PathVariable Long book_id,
-                               BindingResult bindingResult,
                                RedirectAttributes redirectAttributes,
                                Model model) throws IOException {
+
+        Book book1 = bookService.findById(book_id);
+        if(book.getTitle() != null && !book.getTitle().equals(book1.getTitle()) && book.getPublicationYear() != null && !book.getPublicationYear().equals(book1.getPublicationYear())) {
+            bookValidator.validate(book, bindingResult);
+        }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("book_id", book_id);
+            model.addAttribute("authors", authorService.findAll());
             model.addAttribute("book", book);
             return "admin/formEditBook";
         }
@@ -160,7 +170,6 @@ public class BookController {
                     .map(authorService::findById)
                     .collect(Collectors.toList());
         }
-        Book book1 = bookService.findById(book_id);
 
         book1.setTitle(book.getTitle());
         book1.setPublicationYear(book.getPublicationYear());
