@@ -14,7 +14,7 @@
 
 <body>
 
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar('authors', 'Cerca Autore ...')}"></div>
 
 <div class="container mt-5">
   <div class="row justify-content-center">
@@ -71,6 +71,12 @@
             <div class="mb-3">
               <label class="form-label">Data di morte (opzionale)</label>
               <input type="date" class="form-control" th:field="*{dateOfDeath}">
+            </div>
+
+            <!-- Nazionalità  -->
+            <div class="mb-3">
+              <label class="form-label">Nazionalit&agrave</label>
+              <input type="text" class="form-control" th:field="*{nationality}" required>
             </div>
 
             <!-- Libri scritti -->

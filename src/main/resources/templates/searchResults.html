@@ -11,7 +11,7 @@
 </head>
 <body>
 <!-- Include la navbar -->
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar(${type}, ${msg})}"></div>
 
 <div class="container my-4">
 

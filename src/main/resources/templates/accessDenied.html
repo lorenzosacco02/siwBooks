@@ -11,7 +11,7 @@
 </head>
 <body>
 <!-- Include la navbar -->
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar(null, null)}"></div>
 
 <h1>Accesso Negato</h1>
 <div th:if="${error}" class="alert alert-danger" role="alert"

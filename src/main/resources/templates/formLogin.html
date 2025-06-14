@@ -11,7 +11,8 @@
 </head>
 <body>
 <!-- Include la navbar -->
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar(null, null)}"></div>
+
 <h1>Login</h1>
 <form th:action="@{/login}" method="POST">
     <div>

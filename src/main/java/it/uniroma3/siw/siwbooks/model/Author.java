@@ -22,6 +22,9 @@ public class Author {
     private String surname;
 
     @Column(nullable = false)
+    private String nationality;
+
+    @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
@@ -100,5 +103,13 @@ public class Author {
     @Override
     public int hashCode() {
         return Objects.hash(getName(), getSurname(), getDateOfBirth());
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
     }
 }

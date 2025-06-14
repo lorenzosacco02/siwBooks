@@ -140,6 +140,7 @@ public class AuthorController {
         author1.setSurname(author.getSurname());
         author1.setDateOfBirth(author.getDateOfBirth());
         author1.setDateOfDeath(author.getDateOfDeath());
+        author1.setNationality(author.getNationality());
         try {
             authorService.registerAuthor(author1, photo, selectedBooks);
         } catch (IOException e) {

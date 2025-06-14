@@ -30,14 +30,16 @@ public class SearchController {
 
         List<Book> books = new ArrayList<>();
         List<Author> authors = new ArrayList<>();
-
+        String msg = "Cerca ...";
         if (type == null || type.isEmpty()) {
             // Cerca sia libri che autori
             books = bookService.searchByTitle(query);
             authors = authorService.searchByNameOrSurname(query);
         } else if ("books".equals(type)) {
+            msg = "Cerca Libri ...";
             books = bookService.searchByTitle(query);
         } else if ("authors".equals(type)) {
+            msg = "Cerca Autori ...";
             authors = authorService.searchByNameOrSurname(query);
         }
 
@@ -45,6 +47,7 @@ public class SearchController {
         model.addAttribute("authors", authors);
         model.addAttribute("query", query);
         model.addAttribute("type", type);
+        model.addAttribute("msg", msg   );
 
         return "searchResults"; // nome della pagina con i risultati
     }

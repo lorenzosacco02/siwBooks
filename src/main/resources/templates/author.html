@@ -12,7 +12,7 @@
 <body>
 
 <!-- Include la navbar come frammento -->
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar('authors', 'Cerca Autore ...')}"></div>
 
 <!-- Dettagli dell'autore -->
 <div id="app" class="author-details container mt-4">
@@ -25,6 +25,9 @@
     </p>
     <p th:if="${author.dateOfDeath == null}">
         <strong>Anno di nascita:</strong> <span th:text="${author.dateOfBirth}">2025</span>
+    </p>
+    <p>
+        <strong>Nazionalit&agrave:</strong> <span th:text="${author.nationality}">Italia</span>
     </p>
 
     <!-- Foto autore -->
