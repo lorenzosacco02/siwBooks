@@ -83,7 +83,7 @@ public class AuthController {
         credentials.setUser(user);
         credentialsService.saveCredentials(credentials);
         model.addAttribute("user", user);
-        return "registrationSuccess";
+        return "formLogin";
     }
 }
 

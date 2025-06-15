@@ -3,27 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <!-- Bootstrap -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- CSS personalizzato -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">  <!-- aggiunta foglio stile home -->
     <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar(null, null)}"></div>
 
+<!-- Hero Section -->
+<section class="hero mb-5">
+    <div class="container">
+        <h1>Benvenuto su SIWBooks</h1>
+        <p>Scopri libri e autori scelti per te</p>
+    </div>
+</section>
+<!-- Pulsanti con immagini -->
 <div class="container home-buttons">
     <div class="row g-4 justify-content-center">
         <div class="col-12 col-md-6">
-            <a th:href="@{/books}" class="image-link d-block">
-                <img src="/images/books.jpg" alt="Vai ai Libri" class="rounded" />
-                <div class="overlay-text">Esplora i Libri</div>
+            <a th:href="@{/books}" class="image-link d-block rounded shadow">
+                <img src="/images/books.jpg" alt="Vai ai Libri" class="img-fluid rounded" />
+                <div class="overlay-text">Esplora i Libri <i class="bi bi-book"></i></div>
             </a>
         </div>
         <div class="col-12 col-md-6">
-            <a th:href="@{/authors}" class="image-link d-block">
-                <img src="/images/authors.jpg" alt="Vai agli Autori" class="rounded" />
-                <div class="overlay-text">Esplora gli Autori</div>
+            <a th:href="@{/authors}" class="image-link d-block rounded shadow">
+                <img src="/images/authors.jpg" alt="Vai agli Autori" class="img-fluid rounded" />
+                <div class="overlay-text">Esplora gli Autori <i class="bi bi-pen"></i></div>
             </a>
         </div>
     </div>

@@ -1,37 +1,67 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <!-- Bootstrap -->
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- CSS personalizzato -->
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
 </head>
-<body>
-<!-- Include la navbar -->
+<body class="bg-light">
+
+<!-- Navbar -->
 <div th:replace="~{fragments/navbar :: navbar(null, null)}"></div>
 
-<h1>Login</h1>
-<form th:action="@{/login}" method="POST">
-    <div>
-        <span>Username:</span>
-        <span><input name="username" type="text" required /></span>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="form-container shadow p-4 w-100" style="max-width: 400px;">
+        <h2 class="text-center mb-4">Login</h2>
+
+        <!-- Messaggio di errore -->
+        <div th:if="${param.error != null}" class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+            Username o password errati
+        </div>
+
+        <form th:action="@{/login}" method="POST">
+            <!-- Username -->
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+                    <input name="username" type="text" class="form-control" placeholder="Inserisci username" required>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+                <label class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                    <input name="password" type="password" class="form-control" placeholder="Inserisci password" required>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Accedi
+                </button>
+            </div>
+        </form>
+
+        <!-- Link alla registrazione -->
+        <div class="text-center">
+            <span>Non hai un account? </span>
+            <a th:href="@{/register}" class="text-decoration-none">Registrati</a>
+        </div>
     </div>
-    <div>
-        <span>Password:</span>
-        <span><input name="password" type="password" required /></span>
-    </div>
-    <div>
-        <span th:if="${param.error != null}">Username o password errati</span>
-    </div>
-    <div>
-        <span><button type="submit">Login</button></span>
-    </div>
-</form>
-<div>
-    <a th:href="@{/register}" th:text="Registrati">Registrati</a>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
