@@ -7,6 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- CSS personalizzato -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
     <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
 </head>
 <body>
@@ -15,41 +17,41 @@
 
 <h2>Aggiungi una recensione</h2>
 
-<div class="container mt-5">
-    <h2>Aggiungi una recensione</h2>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="form-container shadow-lg p-4 w-100" style="max-width: 550px;">
+        <h2 class="text-center mb-4">Aggiungi Recensione</h2>
+        <form th:action="@{/book/{id}/addReview(id=${book.id})}" th:object="${review}" method="post" class="mt-4">
 
-    <form th:action="@{/book/{id}/addReview(id=${book.id})}" th:object="${review}" method="post" class="mt-4">
+            <!-- Campo testo recensione -->
+            <div class="mb-3">
+                <label for="title" class="form-label">Titolo</label>
+                <textarea th:field="*{title}" class="form-control" id="title" rows="1"></textarea>
+                <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            </div>
 
-        <!-- Campo testo recensione -->
-        <div class="mb-3">
-            <label for="title" class="form-label">Titolo</label>
-            <textarea th:field="*{title}" class="form-control" id="title" rows="1"></textarea>
-            <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
-        </div>
+            <!-- Campo testo recensione -->
+            <div class="mb-3">
+                <label for="content" class="form-label">Recensione</label>
+                <textarea th:field="*{text}" class="form-control" id="content" rows="4"></textarea>
+            </div>
 
-        <!-- Campo testo recensione -->
-        <div class="mb-3">
-            <label for="content" class="form-label">Recensione</label>
-            <textarea th:field="*{text}" class="form-control" id="content" rows="4"></textarea>
-        </div>
+            <!-- Campo voto -->
+            <div class="mb-3">
+                <label for="rating" class="form-label">Voto</label>
+                <select th:field="*{rating}" class="form-select" id="rating" required>
+                    <option th:value="1">1</option>
+                    <option th:value="2">2</option>
+                    <option th:value="3">3</option>
+                    <option th:value="4">4</option>
+                    <option th:value="5">5</option>
+                </select>
+                <div class="text-danger" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></div>
+            </div>
 
-        <!-- Campo voto -->
-        <div class="mb-3">
-            <label for="rating" class="form-label">Voto</label>
-            <select th:field="*{rating}" class="form-select" id="rating" required>
-                <option th:value="1">1</option>
-                <option th:value="2">2</option>
-                <option th:value="3">3</option>
-                <option th:value="4">4</option>
-                <option th:value="5">5</option>
-            </select>
-            <div class="text-danger" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></div>
-        </div>
-
-        <!-- Pulsante di invio -->
-        <button type="submit" class="btn btn-primary">Invia recensione</button>
-    </form>
+            <!-- Pulsante di invio -->
+            <button type="submit" class="btn btn-primary">Invia recensione</button>
+        </form>
+    </div>
 </div>
-
 </body>
 </html>

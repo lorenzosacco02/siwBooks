@@ -1,0 +1,79 @@
+
+/* Contenitore dei form */
+.form-container {
+    background-color: #f5f0e6;
+    border: 1px solid #d2b48c;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(139, 109, 92, 0.15);
+    max-width: 600px;
+    margin: 3rem auto;
+    font-family: 'Georgia', serif;
+}
+
+/* Titoli dei form */
+.form-container h1,
+.form-container h2 {
+    color: #4e3b2c;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+/* Etichette */
+.form-container label {
+    font-weight: 500;
+    color: #5a4633;
+}
+
+/* Input, textarea, select */
+.form-container input,
+.form-container textarea,
+.form-container select {
+    border: 1px solid #d2b48c;
+    background-color: #fffaf3;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #3d2f23;
+    font-family: 'Georgia', serif;
+}
+
+/* Focus sugli input */
+.form-container input:focus,
+.form-container textarea:focus,
+.form-container select:focus {
+    outline: none;
+    border-color: #a67b5b;
+    box-shadow: 0 0 5px rgba(166, 123, 91, 0.4);
+}
+
+/* Bottoni */
+.form-container button,
+.form-container input[type="submit"] {
+    background-color: #a67b5b;
+    color: #fffaf3;
+    font-weight: bold;
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.form-container button:hover,
+.form-container input[type="submit"]:hover {
+    background-color: #8b6d5c;
+}
+
+/* Messaggi di errore */
+.form-container .error {
+    color: #a94442;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    border-radius: 6px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}

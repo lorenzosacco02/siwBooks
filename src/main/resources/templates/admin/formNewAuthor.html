@@ -9,6 +9,9 @@
 
     <!-- CSS personalizzato -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+
     <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
 </head>
 
@@ -26,12 +29,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
 
-            <div class="card shadow-lg rounded-4 border-0">
-                <div class="card-header bg-primary text-white rounded-top-4">
-                    <h4 class="mb-0">Aggiungi un nuovo autore</h4>
-                </div>
-
-                <div class="card-body p-4">
+            <div class="container d-flex justify-content-center align-items-center min-vh-100">
+                <div class="form-container shadow-lg p-4 w-100" style="max-width: 550px;">
+                    <h2 class="text-center mb-4">Aggiungi Autore</h2>
                     <form id="autoreForm" th:action="@{/admin/addAuthor}" th:object="${author}" method="post"
                           enctype="multipart/form-data">
 
