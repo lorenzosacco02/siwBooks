@@ -1,0 +1,25 @@
+/* Navbar */
+.navbar-custom {
+    background-color: #8b6d5c; /* marrone caldo */
+    box-shadow: 0 2px 6px rgba(75, 59, 43, 0.3);
+    height: 70px; /* altezza navbar */
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: #f5f0e6 !important; /* beige chiaro */
+    font-weight: 600;
+    font-family: "Palatino Linotype", Palatino, serif;
+}
+
+.navbar-custom .nav-link:hover {
+    color: #d2b48c !important; /* tan chiaro */
+    text-decoration: underline;
+}
+
+/* Navbar active and focus */
+.navbar-custom .nav-link.active,
+.navbar-custom .nav-link:focus {
+    color: #d2b48c !important;
+    text-decoration: underline;
+}

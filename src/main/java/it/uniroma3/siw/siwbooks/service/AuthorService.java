@@ -33,6 +33,18 @@ public class AuthorService {
     }
 
     @Transactional
+    public void deleteAuthor(Long id) {
+        authorRepository.deleteAllBookFromAuthor(id);
+        authorRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void removeBook(Long author_id, Long book_id) {
+        authorRepository.deleteBookFromAuthor(author_id, book_id);
+        this.save(this.findById(author_id));
+    }
+
+    @Transactional
     public Iterable<Author> findAll() {
         return authorRepository.findAll();
     }
@@ -44,8 +56,8 @@ public class AuthorService {
 
     @Transactional
     public List<Author> searchByNameOrSurname(String name) {
-        List<Author> authors = authorRepository.findByNameStartingWithIgnoreCase(name);
-        authors.addAll(authorRepository.findBySurnameStartingWithIgnoreCase(name));
+        List<Author> authors = authorRepository.searchByFullNameReverse(name);
+        authors.addAll(authorRepository.searchByFullName(name));
         Set<Author> set = new LinkedHashSet<>(authors); // mantiene l'ordine
         authors = new ArrayList<>(set);
         return authors;
@@ -62,7 +74,7 @@ public class AuthorService {
     }
 
     @Transactional
-    public void registerAuthor(Author author, MultipartFile photo) throws IOException {
+    public void registerAuthor(Author author, MultipartFile photo, List<Book> selected) throws IOException {
 
         if (!photo.isEmpty()) {
             Image image = new Image();
@@ -73,10 +85,29 @@ public class AuthorService {
             author.setImage(image);
         }
 
+        for (Book book : selected) {
+            if(!author.getWritten().contains(book)) {
+                author.getWritten().add(book);
+            }
+        }
+
         for (Book book : author.getWritten()) {
-            book.getAuthors().add(author);
+            if (!book.getAuthors().contains(author)) {
+                book.getAuthors().add(author);
+            }
         }
 
         this.save(author);
     }
+
+    public boolean authorExistsByNameAndLastNameAndDateOfBirth(String name, String surname, LocalDate dateOfBirth) {
+        List<Author> authors = authorRepository.findByNameIgnoreCase(name);
+        for (Author author : authors) {
+            if (author.getDateOfBirth() != null && author.getDateOfBirth().isEqual(dateOfBirth) && author.getSurname() != null && author.getSurname().equalsIgnoreCase(surname)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

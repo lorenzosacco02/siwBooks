@@ -1,6 +1,9 @@
 package it.uniroma3.siw.siwbooks.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -16,19 +19,28 @@ public class Author {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Specifica il Nome")
     private String name;
 
     @Column(nullable = false)
+    @NotBlank(message = "Specifica il Cognome")
     private String surname;
 
     @Column(nullable = false)
+    @NotBlank(message = "Specifica la Nazionalità")
+    private String nationality;
+
+    @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past(message = "La Data deve essere al passato")
+    @NotNull(message = "Specifica la Data di Nascita")
     private LocalDate dateOfBirth;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past(message = "La Data deve essere al passato")
     private LocalDate dateOfDeath;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Image image;
 
     @ManyToMany(mappedBy="authors")
@@ -100,5 +112,13 @@ public class Author {
     @Override
     public int hashCode() {
         return Objects.hash(getName(), getSurname(), getDateOfBirth());
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
     }
 }

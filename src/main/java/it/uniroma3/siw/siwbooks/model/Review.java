@@ -1,6 +1,10 @@
 package it.uniroma3.siw.siwbooks.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
@@ -13,8 +17,12 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Specifica un titolo")
     private String title;
 
+    @Min(value = 0)
+    @Max(value = 5)
+    @NotNull(message = "Specifica un voto")
     private Integer rating; // 1-5
 
     @Column(length = 500)

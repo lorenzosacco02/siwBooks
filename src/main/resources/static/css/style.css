@@ -3,41 +3,72 @@
     box-sizing: border-box;
 }
 
-/* Personalizzazione sicura della navbar Bootstrap */
-.navbar-custom {
-    background-color: #7190b1 !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Colori dei link della navbar */
-.navbar-custom .navbar-brand,
-.navbar-custom .nav-link {
-    color: #ecf0f1 !important;
-    font-weight: 500;
-}
-
-/* Hover */
-.navbar-custom .nav-link:hover {
-    text-decoration: underline;
-    color: #ffffff !important;
-}
-
-/* Per evitare che il contenuto venga coperto dalla navbar fissa */
+/* Colori e font generali */
 body {
-    padding-top: 70px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    background-color: #f5f0e6; /* beige chiaro */
+    color: #4b3b2b; /* marrone scuro */
+    margin: 0;
+    padding-top: 70px; /* spazio per navbar fissa */
 }
 
-/* Layout globale */
-#app,
-main {
+
+/* Sezione home-buttons aggiornata */
+.home-buttons {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 1rem;
+}
+
+/* Link immagine stile classico */
+.image-link {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+/* Le immagini occupano l'intera larghezza del contenitore */
+.image-link img {
+    width: 70%;
+    height: 70%;
+    display: block;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    max-height: 350px;
+    margin: 0 auto; /* centra l'immagine */
 }
 
 
 .image-link:hover {
-    transform: scale(1.03);
+    transform: scale(1.05);
 }
 
-/* Griglia libri */
+
+/* Overlay testo su immagini */
+.overlay-text {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(139, 109, 92, 0.8); /* marrone scuro trasparente */
+    color: #f5f0e6; /* colore scritte*/
+    font-weight: 600;
+    font-size: 1.3rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    text-align: center;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Palatino Linotype", Palatino, serif;
+    box-shadow: 0 0 6px rgba(75, 59, 43, 0.7);
+}
+
+/* Book grid (if used) */
 .book-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -48,6 +79,8 @@ main {
 .book-card {
     text-align: center;
     transition: transform 0.2s ease;
+    font-family: Georgia, serif;
+    color: #4b3b2b;
 }
 
 .book-card:hover {
@@ -62,53 +95,52 @@ main {
 .book-card img {
     width: 100%;
     height: auto;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(75, 59, 43, 0.2);
 }
 
 .book-title {
     margin-top: 0.5rem;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 1rem;
 }
 
-.image-link {
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.image-link img {
-    width: 100%;
-    height: auto;
-    display: block;
-    transition: transform 0.3s ease;
-}
-.image-link:hover img {
-    transform: scale(1.05);
-}
-.overlay-text {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    font-weight: 600;
-    font-size: 1.5rem;
+/* Footer (optional) */
+footer {
+    background-color: #8b6d5c;
+    color: #f5f0e6;
+    padding: 1rem 0;
     text-align: center;
-    padding: 0.75rem 0;
-    transition: background 0.3s ease;
+    font-family: "Palatino Linotype", Palatino, serif;
+    box-shadow: inset 0 1px 3px rgba(75, 59, 43, 0.3);
+}
+/* Pulsante aggiungi dentro immagine */
+.add-button {
+    top: 0.75rem;
+    right: 0.75rem;
+    background-color: rgba(139, 109, 92, 0.85); /* marrone/beige scuro trasparente */
+    color: #fdfaf5;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    z-index: 10;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.image-link:hover .overlay-text {
-    background: rgba(0, 0, 0, 0.7);
+.add-button:hover {
+    background-color: rgba(139, 109, 92, 1);
+    transform: scale(1.1);
 }
 
-.home-buttons {
-    max-width: 960px;
-    margin: 4rem auto;
+.logo-img {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
 }
+
+

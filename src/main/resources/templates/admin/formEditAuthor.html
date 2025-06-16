@@ -31,9 +31,10 @@
 
             <div class="container d-flex justify-content-center align-items-center min-vh-100">
                 <div class="form-container shadow-lg p-4 w-100" style="max-width: 550px;">
-                    <h2 class="text-center mb-4">Aggiungi Autore</h2>
-                    <form id="autoreForm" th:action="@{/admin/addAuthor}" th:object="${author}" method="post"
-                          enctype="multipart/form-data">
+                    <h2 class="text-center mb-4">Modifica Autore</h2>
+
+                    <form id="autoreForm" th:action="@{'/admin/editAuthor/'+${author.id}}" th:object="${author}"
+                          method="post" enctype="multipart/form-data">
 
                         <!-- Errore Autore Duplicato-->
                         <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
@@ -44,6 +45,14 @@
                         <div class="mb-3">
                             <label class="form-label">Foto autore</label>
                             <input type="file" id="photo" name="photo" class="form-control"/>
+                        </div>
+                        <!-- Bottone per eliminare la foto -->
+                        <div class="mt-2">
+                            <a th:if="${author.image != null}"
+                               th:href="@{'/admin/editAuthor/deletePhoto/' + ${author.id}}"
+                               class="btn btn-outline-danger btn-sm">
+                                Elimina foto
+                            </a>
                         </div>
 
                         <!-- Anteprima immagine -->
@@ -113,12 +122,30 @@
                             </ul>
                         </div>
 
-                      <!-- Visualizzazione dei libri selezionati -->
-                      <label class="form-label">Libri Aggiunti</label>
-                      <ul class="list-group mb-3" id="selectedBooksList"></ul>
+                        <!-- Visualizzazione dei libri selezionati -->
+                        <label class="form-label">Libri Aggiunti</label>
+                        <ul class="list-group mb-3" id="selectedBooksList"></ul>
 
 
-                      <!-- Pulsante submit -->
+                        <!-- Libri da rimuovere -->
+                        <div class="mb-3">
+                            <label class="form-label">Libri scritti dall'autore</label>
+
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center"
+                                    th:each="book : ${author.written}">
+
+                                    <span th:text="${book.title}">Titolo del libro</span>
+
+                                    <a class="btn btn-outline-danger btn-sm"
+                                       th:href="@{'/admin/editAuthor/' + ${author.id} + '/deleteBook/' + ${book.id}}">
+                                        Rimuovi
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Pulsante submit -->
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg">Salva Autore</button>
                         </div>

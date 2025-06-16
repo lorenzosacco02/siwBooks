@@ -2,6 +2,7 @@ package it.uniroma3.siw.siwbooks.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,14 +15,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Specifica un Nome")
     private String name;
 
+    @NotBlank(message = "Specifica un Cognome")
     private String surname;
 
+    @NotBlank(message = "Specifica uno Username")
     private String username;
 
+    @NotBlank(message = "Specifica una Password")
     private String password;
 
+    @NotBlank(message = "Specifica una Email")
     private String email;
 
     private String role; // "USER" o "ADMIN"

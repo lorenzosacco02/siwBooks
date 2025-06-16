@@ -1,5 +1,6 @@
 package it.uniroma3.siw.siwbooks.service;
 
+import it.uniroma3.siw.siwbooks.model.Author;
 import it.uniroma3.siw.siwbooks.model.Book;
 import it.uniroma3.siw.siwbooks.model.Image;
 import it.uniroma3.siw.siwbooks.repository.BookRepository;
@@ -35,12 +36,24 @@ public class BookService {
     }
 
     @Transactional
-    public List<Book> searchByTitle(String title) {
-        return bookRepository.findByTitleContainingIgnoreCase(title);
+    public void deleteBook(Long id) {
+        bookRepository.deleteAllAuthorFromBook(id);
+        bookRepository.deleteById(id);
     }
 
     @Transactional
-    public void registerBook(Book book, MultipartFile photo, MultipartFile[] images) throws IOException {
+    public void removeAuthor(Long bookId, Long authorId) {
+        bookRepository.deleteBookFromAuthor(bookId, authorId);
+        this.save(findById(bookId));
+    }
+
+    @Transactional
+    public List<Book> searchByTitle(String title) {
+        return bookRepository.searchByTitleIgnoringSpaces(title);
+    }
+
+    @Transactional
+    public void registerBook(Book book, MultipartFile photo, MultipartFile[] images, List<Author> selected) throws IOException {
         if (!photo.isEmpty()) {
             Image image = new Image();
             image.setName(photo.getOriginalFilename());
@@ -61,6 +74,21 @@ public class BookService {
             }
         }
 
+        // Associazione con autori (usando entità gestite dal contesto)
+        for (Author author : selected) {
+            book.getAuthors().add(author);
+        }
+
         this.save(book);
+    }
+
+    public boolean bookExistsByNameAndPublicationYear(String title, Integer publicationYear) {
+        List<Book> books = bookRepository.searchByTitleIgnoringSpaces(title);
+        for (Book book : books) {
+            if (book.getPublicationYear().equals(publicationYear)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 package it.uniroma3.siw.siwbooks.controller;
 
+import it.uniroma3.siw.siwbooks.controller.validator.BookValidator;
 import it.uniroma3.siw.siwbooks.model.Author;
 import it.uniroma3.siw.siwbooks.model.Book;
 import it.uniroma3.siw.siwbooks.model.Image;
@@ -7,6 +8,7 @@ import it.uniroma3.siw.siwbooks.service.AuthorService;
 import it.uniroma3.siw.siwbooks.service.BookService;
 import it.uniroma3.siw.siwbooks.service.ImageService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,12 +17,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class BookController {
@@ -32,6 +38,15 @@ public class BookController {
     private BookService bookService;
     @Autowired
     private AuthorService authorService;
+    @Autowired
+    private BookValidator bookValidator;
+
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        // Dici a Spring: non provare a bindare automaticamente il campo `images`
+        binder.setDisallowedFields("images");
+    }
 
     @GetMapping("/book/{book_id}/cover")
     public ResponseEntity<byte[]> getImage(@PathVariable Long book_id) {
@@ -76,31 +91,8 @@ public class BookController {
     }
 
 
-    @GetMapping("/admin/formNewBook/addAuthor/{id}")
-    public String getAllAuthors(Model model,
-                              HttpSession session,
-                              @PathVariable Long id) {
-        Book book = (Book) session.getAttribute("book");
-        Author author = authorService.findById(id);
-        List<Author> addedAuthors = book.getAuthors();
-        if (!addedAuthors.contains(author)) {
-            book.getAuthors().add(author);
-        }
-        model.addAttribute("book", book);
-        List<Author> newAuthors = (List<Author>)authorService.findAll();
-        newAuthors.removeAll(addedAuthors);
-        model.addAttribute("authors", newAuthors);
-        return "admin/formNewBook";
-    }
-
     @GetMapping("/admin/addBook")
-    public String addBook(Model model,
-                          HttpSession session) {
-        Book book = (Book) session.getAttribute("book");
-        if (book == null){
-            book = new Book();
-        }
-        session.setAttribute("book", book);
+    public String addBook(Model model) {
         model.addAttribute("authors", authorService.findAll());
         model.addAttribute("book", new Book());
         return "admin/formNewBook";
@@ -108,30 +100,113 @@ public class BookController {
 
 
     @PostMapping("/admin/addBook")
-    public String saveBook(@ModelAttribute("book") Book book,
-                             BindingResult bindingResult,
-                             HttpSession session,
-                             RedirectAttributes redirectAttributes,
-                             @RequestParam("photo") MultipartFile photo,
-                             @RequestParam("images") MultipartFile[] images,
-                             Model model) throws IOException {
-
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("errors", bindingResult.getAllErrors());
-//            model.addAttribute("book", book);
-//            return "admin/formNewBook";
-//        }
-
-        try{
-            bookService.registerBook(book, photo, images);
+    public String saveBook(@Valid  @ModelAttribute("book") Book book,
+                           BindingResult bindingResult,
+                           @RequestParam(value = "authorIds", required = false) String authorIds,
+                           @RequestParam("photo") MultipartFile photo,
+                           @RequestParam("images") MultipartFile[] images,
+                           RedirectAttributes redirectAttributes,
+                           Model model) throws IOException {
+        bookValidator.validate(book, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("authors", authorService.findAll());
+            model.addAttribute("book", book);
+            return "admin/formNewBook";
         }
-        catch(IOException e){
+
+
+        List<Author> selectedAuthors = new ArrayList<>();
+        if (!authorIds.isEmpty()) {
+            selectedAuthors = Arrays.stream(authorIds.split(","))
+                    .map(Long::parseLong)
+                    .map(authorService::findById)
+                    .collect(Collectors.toList());
+        }
+
+        try {
+            bookService.registerBook(book, photo, images, selectedAuthors);
+        } catch (IOException e) {
             return "redirect:/";
         }
 
-        session.removeAttribute("book");
         redirectAttributes.addFlashAttribute("success", "Libro aggiunto con successo!");
         return "redirect:/book/" + book.getId();
     }
 
+    @GetMapping("/admin/editBook/{book_id}")
+    public String editAuthor(Model model,
+                             @PathVariable Long book_id) {
+        model.addAttribute("authors", authorService.findAll());
+        model.addAttribute("book", bookService.findById(book_id));
+        return "admin/formEditBook";
+    }
+
+
+    @PostMapping("/admin/editBook/{book_id}")
+    public String updateAuthor(@Valid @ModelAttribute("book") Book book,
+                               BindingResult bindingResult,
+                               @RequestParam("photo") MultipartFile photo,
+                               @RequestParam("images") MultipartFile[] images,
+                               @RequestParam(value = "authorIds", required = false) String authorIds,
+                               @PathVariable Long book_id,
+                               RedirectAttributes redirectAttributes,
+                               Model model) throws IOException {
+
+        Book book1 = bookService.findById(book_id);
+        if(book.getTitle() != null && !book.getTitle().equals(book1.getTitle()) && book.getPublicationYear() != null && !book.getPublicationYear().equals(book1.getPublicationYear())) {
+            bookValidator.validate(book, bindingResult);
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("book_id", book_id);
+            model.addAttribute("authors", authorService.findAll());
+            model.addAttribute("book", book);
+            return "admin/formEditBook";
+        }
+
+        List<Author> selectedAuthors = new ArrayList<>();
+        if (!authorIds.isEmpty()) {
+            selectedAuthors = Arrays.stream(authorIds.split(","))
+                    .map(Long::parseLong)
+                    .map(authorService::findById)
+                    .collect(Collectors.toList());
+        }
+
+        book1.setTitle(book.getTitle());
+        book1.setPublicationYear(book.getPublicationYear());
+
+        try {
+            bookService.registerBook(book1, photo, images, selectedAuthors);
+        } catch (IOException e) {
+            return "redirect:/";
+        }
+        redirectAttributes.addFlashAttribute("success", "Autore modificato con successo!");
+        return "redirect:/book/" + book_id;
+    }
+
+
+    @GetMapping("admin/editBook/{book_id}/deleteAuthor/{author_id}")
+    public String removeBookFromAuthor(@PathVariable Long author_id,
+                                       @PathVariable Long book_id,
+                                       Model model) {
+        bookService.removeAuthor(book_id, author_id);
+        return "redirect:/admin/editBook/" + book_id;
+    }
+
+    @GetMapping("admin/deleteBook/{book_id}")
+    public String removeBook(@PathVariable Long book_id) {
+        bookService.deleteBook(book_id);
+        return "redirect:/books";
+    }
+
+    @GetMapping("/admin/editBook/deletePhoto/{book_id}")
+    public String removePhoto(@PathVariable Long book_id,
+                              Model model) {
+        Book book = bookService.findById(book_id);
+        Long image_id = book.getCover().getId();
+        book.setCover(null);
+        imageService.deleteImage(image_id);
+        model.addAttribute("authors", authorService.findAll());
+        model.addAttribute("book", book);
+        return "redirect:/admin/editBook/" + book_id;
+    }
 }

@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +24,9 @@ public class AuthConfiguration {
     private DataSource dataSource;
 
     @Autowired
+    CustomOAuth2UserService customOAuth2UserService;
+
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
@@ -35,6 +40,11 @@ public class AuthConfiguration {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
     protected SecurityFilterChain configure(final HttpSecurity httpSecurity)
             throws Exception{
         httpSecurity
@@ -42,7 +52,7 @@ public class AuthConfiguration {
                 .authorizeHttpRequests()
 
                 // pagine e risorse su cui tutti possono fare GET
-                .requestMatchers(HttpMethod.GET,"/","/login","/register","/index","/author/**","/authors","searchResults","/book/**","/books","/css/**", "/images/**", "favicon.ico").permitAll()
+                .requestMatchers(HttpMethod.GET,"/","/login","/register","/index","/author/**","/authors","/search","/book/**","/books","/css/**", "/images/**", "favicon.ico").permitAll()
                 // pagine e risorse su cui tutti possono fare POST
                 .requestMatchers(HttpMethod.POST,"/search","/register","/login").permitAll()
 
@@ -65,9 +75,16 @@ public class AuthConfiguration {
                 .permitAll()
                 .defaultSuccessUrl("/success",true)
                 .failureUrl("/login?error=true")
+                .and()
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/success", true)
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
+                )
 
                 // LOGOUT:
-                .and()
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
