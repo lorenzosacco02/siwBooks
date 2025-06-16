@@ -130,7 +130,7 @@ public class AuthorController {
 
         Author author1 = authorService.findById(author_id);
 
-        if(author.getName()!= null && author.getSurname() != null && author.getDateOfBirth() != null && author.getDateOfBirth().equals(author1.getDateOfBirth()) && !author.getName().equals(author1.getName()) && !author.getSurname().equals(author1.getSurname())) {
+        if(author.getName()!= null && author.getSurname() != null && !author.getName().equals(author1.getName()) && !author.getSurname().equals(author1.getSurname())) {
             authorValidator.validate(author, bindingResult);
         }
         if (bindingResult.hasErrors()) {
