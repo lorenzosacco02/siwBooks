@@ -4,9 +4,6 @@
 name: Build and deploy JAR app to Azure Web App - SIWBooksLorenzo
 
 on:
-  push:
-    branches:
-      - master
   workflow_dispatch:
 
 jobs:
