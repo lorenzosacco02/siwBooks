@@ -1,10 +1,14 @@
 package it.uniroma3.siw.siwbooks.controller;
 
 
+import it.uniroma3.siw.siwbooks.model.User;
+import it.uniroma3.siw.siwbooks.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -34,6 +38,5 @@ public class GlobalController {
         return auth != null && auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ADMIN"));
     }
-
 
 }

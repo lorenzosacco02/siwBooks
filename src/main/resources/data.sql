@@ -28,7 +28,7 @@ INSERT INTO author (name, surname, date_of_birth, nationality) VALUES
 
 
 -- ADMIN con password 'lollo'--
-INSERT INTO users (name, surname, username, password, email, role) VALUES
-    ('Lorenzo', 'Sacco', 'lollo', '$2a$10$Zvb18mH/1S.S.ljBRXJVwefA/qa.ebejmVPEIhOVlQk7QwTt2n2ou', 'lorenzo.sacco@gmail.com', 'ADMIN');
+INSERT INTO users (name, surname, email, role) VALUES
+    ('Lorenzo', 'Sacco', 'lorenzo.sacco@gmail.com', 'ADMIN');
 INSERT INTO credentials (username, password, role, user_id) VALUES
     ('lollo', '$2a$10$Zvb18mH/1S.S.ljBRXJVwefA/qa.ebejmVPEIhOVlQk7QwTt2n2ou', 'ADMIN', 1);

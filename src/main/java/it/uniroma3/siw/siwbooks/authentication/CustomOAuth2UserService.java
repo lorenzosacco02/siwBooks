@@ -9,6 +9,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import static it.uniroma3.siw.siwbooks.model.Credentials.*;
+
 
 import java.util.Collections;
 import java.util.Map;
@@ -42,8 +44,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             Credentials credentials = new Credentials();
             credentials.setUsername(email);
             credentials.setPassword(UUID.randomUUID().toString());
-            credentials.setRole(Credentials.DEFAULT_ROLE);
+            credentials.setRole(DEFAULT_ROLE);
             credentials.setUser(user);
+            user.setRole(DEFAULT_ROLE);
             credentialsRepository.save(credentials);
         }
 
@@ -51,7 +54,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Credentials credentials = credentialsRepository.findByUsername(email).get();
         return new CustomUserPrincipal(
                 credentials.getUsername(),
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + credentials.getRole())),
+                Collections.singleton(new SimpleGrantedAuthority(credentials.getRole())),
                 attributes
         );
     }

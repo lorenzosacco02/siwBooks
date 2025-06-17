@@ -62,7 +62,7 @@
                     <div class="ab-reviews">
                         <h5 class="text-brown mb-3"><i class="bi bi-chat-left-text me-2"></i> Recensioni</h5>
 
-                        <div class="text-center mb-4" th:if="${userDetails != null}">
+                        <div class="text-center mb-4" th:if="${userDetails != null and isRecensito == false}">
                             <a th:href="@{'/book/' + ${book.id} + '/addReview'}" class="btn btn-brown">
                                 <i class="bi bi-pencil-square me-1"></i> Aggiungi Recensione
                             </a>
@@ -71,7 +71,7 @@
                         <div th:each="review : ${book.reviews}" class="mb-4">
                             <div class="border-bottom pb-3 mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <strong th:text="${review.author.username}">Recensore</strong>
+                                    <strong th:text="${review.authorUsername}">Recensore</strong>
                                     <div>
                                         <div class="stars">
                                             <span th:each="i : ${#numbers.sequence(1, 5)}"
@@ -84,7 +84,7 @@
                                 <h6 class="mt-2" th:text="${review.title}">Titolo Recensione</h6>
                                 <p th:text="${review.text}">Testo recensione...</p>
                                 <div class="d-flex gap-2">
-                                    <a th:if="${userDetails != null and userDetails.username == review.author.username}"
+                                    <a th:if="${userDetails != null and userDetails.username == review.authorUsername}"
                                        th:href="@{'/book/' + ${book.id} + '/updateReview/' + ${review.id}}"
                                        class="btn btn-outline-brown btn-sm">
                                         <i class="bi bi-pencil-fill"></i>
