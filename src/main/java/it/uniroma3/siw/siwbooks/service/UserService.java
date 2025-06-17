@@ -16,20 +16,16 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CredentialsService credentialsService;
 
     @Transactional
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                String username = ((UserDetails) principal).getUsername();
-                Optional<User> userOpt = userRepository.findByUsername(username);
-                return userOpt.orElse(null);
-            }
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return null;
         }
-
-        return null;
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return credentialsService.getCredentials(userDetails.getUsername()).getUser();
     }
 }

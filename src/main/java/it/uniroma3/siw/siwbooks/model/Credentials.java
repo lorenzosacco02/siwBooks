@@ -18,9 +18,7 @@ public class Credentials {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Inserisci un Nome Utente")
     private String username;
-    @NotBlank(message = "Inserisci una Password")
     private String password;
 
     private String role;

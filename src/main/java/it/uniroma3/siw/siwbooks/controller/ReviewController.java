@@ -71,6 +71,8 @@ public class ReviewController {
             return "redirect:/accessDenied";
         }
         review.setAuthor(userService.getCurrentUser());
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        review.setAuthorUsername(userDetails.getUsername());
         review.setBook(book);
 
         reviewService.save(review);

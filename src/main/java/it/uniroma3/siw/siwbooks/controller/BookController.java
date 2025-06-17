@@ -1,12 +1,11 @@
 package it.uniroma3.siw.siwbooks.controller;
 
 import it.uniroma3.siw.siwbooks.controller.validator.BookValidator;
-import it.uniroma3.siw.siwbooks.model.Author;
-import it.uniroma3.siw.siwbooks.model.Book;
-import it.uniroma3.siw.siwbooks.model.Image;
+import it.uniroma3.siw.siwbooks.model.*;
 import it.uniroma3.siw.siwbooks.service.AuthorService;
 import it.uniroma3.siw.siwbooks.service.BookService;
 import it.uniroma3.siw.siwbooks.service.ImageService;
+import it.uniroma3.siw.siwbooks.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,8 @@ public class BookController {
     private AuthorService authorService;
     @Autowired
     private BookValidator bookValidator;
+    @Autowired
+    private UserService userService;
 
 
     @InitBinder
@@ -81,6 +82,16 @@ public class BookController {
     public String getBook(@PathVariable Long book_id, Model model) {
         Book book = bookService.findById(book_id);
         model.addAttribute("book", book);
+        boolean isRecensito = false;
+        User user =  userService.getCurrentUser();
+        if(user != null) {
+            for(Review review : user.getReviews()) {
+                if(review.getBook().getId().equals(book_id)){
+                    isRecensito = true;
+                }
+            }
+        }
+        model.addAttribute("isRecensito", isRecensito);
         return "book";
     }
 

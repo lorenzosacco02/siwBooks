@@ -1,0 +1,57 @@
+/* Card autore */
+.ab-card { border: none; border-radius: 0.75rem; overflow: hidden; }
+.ab-img { max-width: 100%; height: auto; border-radius: 0.5rem; }
+.ab-thumb-img { width: 100px; height: auto; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+.card-body { font-family: Georgia, serif; }
+.card-title { font-family: 'Palatino Linotype', serif; font-weight: 600; }
+
+/* Lista libri */
+.list-group-item { border: none; padding-left: 0; }
+.list-group-item i { font-size: 1.1rem; }
+
+/* Palette classica */
+.bg-cream { background-color: #fdfaf5; }
+.bg-light-beige { background-color: #f8f1e7; }
+.text-brown { color: #5c4033 !important; }
+.btn-outline-brown { color: #5c4033; border: 1px solid #5c4033; background: transparent; }
+.btn-outline-brown:hover { background: #5c4033; color: #fdfaf5; }
+.btn-brown { background-color: #5c4033; color: #fdfaf5; border: none; }
+.btn-brown:hover { background-color: #8b6d5c; }
+
+/* Recensioni */
+.ab-reviews .border-bottom { border-color: #e0d3c2 !important; }
+
+.stars {
+    font-size: 24px;
+    font-family: "Times New Roman", serif; /* Un carattere più classico */
+    color: gray;
+}
+
+.filled {
+    color: #c6a700;
+    content: "★"; /* Cambia la stella vuota in piena */
+}
+
+.review-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+}
+
+.review-text {
+    font-size: 16px;
+    color: #555;
+}
+
+.review-author {
+    font-size: 14px;
+    color: #5c4033;
+    display: flex;
+    align-items: center;
+}
+
+.review-author i {
+    margin-right: 8px;
+    color: #8b6d5c; /* Blu Bootstrap */
+}

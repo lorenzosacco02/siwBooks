@@ -34,6 +34,16 @@ public class Review {
     @ManyToOne
     private User author;
 
+    private String authorUsername;
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
+    }
+
     public Long getId() {
         return id;
     }
