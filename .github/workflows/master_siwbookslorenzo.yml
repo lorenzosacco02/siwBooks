@@ -4,9 +4,6 @@
 name: Build and deploy JAR app to Azure Web App - SIWBooksLorenzo
 
 on:
-  push:
-    branches:
-      - master
   workflow_dispatch:
 
 jobs:
@@ -25,7 +22,12 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install -DskipTests
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -53,6 +55,17 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3132078A992F46DB8582B9B42C2EAFCB }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BAC4068D74C9439B9D97638738546EBC }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_084F2601906B40CB8E6FFA087CCBAB12 }}
+      - name: Set environment variables in Azure App Service
+        run: |
+          az webapp config appsettings set --name SIWBooks \
+            --resource-group SIW \
+            --settings \
+              DB_HOST=${{ secrets.DB_HOST }} \
+              DB_USERNAME=${{ secrets.DB_USERNAME }} \
+              DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+              GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
