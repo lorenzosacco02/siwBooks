@@ -144,4 +144,19 @@ footer {
     object-fit: contain;
 }
 
+.book-card-img-top {
+    width: 304px;
+    height: 487px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0.5rem
+}
+
+.author-card-img-top {
+    width: 306px;
+    height: 395px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0.5rem
+}
 

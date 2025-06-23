@@ -38,7 +38,7 @@
             <!-- Campo voto -->
             <div class="mb-3">
                 <label for="rating" class="form-label">Voto</label>
-                <select th:field="*{rating}" class="form-select" id="rating" required>
+                <select th:field="*{rating}" class="form-select" id="rating" required th:min="1" th:max="5">
                     <option th:value="0">0</option>
                     <option th:value="1">1</option>
                     <option th:value="2">2</option>
