@@ -25,7 +25,7 @@
                 <div class="card h-100">
                     <img th:src="@{'/author/' + ${author.id} + '/image'}"
                          th:alt="${author.name}"
-                         class="card-img-top"
+                         class="author-card-img-top"
                          onerror="this.onerror=null;this.src='/images/imagePlaceholder.jpg';"/>
                     <!-- Pulsante Delete in alto a destra -->
                     <a th:if="${userDetails != null and isAdmin}" th:href="@{'/admin/deleteAuthor/' + ${author.id}}"

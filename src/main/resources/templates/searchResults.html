@@ -30,7 +30,7 @@
           <div class="card h-100">
             <img th:src="@{'/author/' + ${author.id} + '/image'}"
                  th:alt="${author.name}"
-                 class="card-img-top"
+                 class="author-card-img-top"
                  onerror="this.onerror=null;this.src='/images/imagePlaceholder.jpg';" />
             <div class="card-body">
               <h5 class="card-title" th:text="${author.name} + ' ' + ${author.surname}">Nome Autore</h5>
@@ -44,13 +44,13 @@
   <!-- Libri -->
   <div th:if="${books.size() > 0}" class="mt-5">
     <h3>Libri</h3>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
       <div class="col" th:each="book : ${books}">
         <a th:href="@{'/book/' + ${book.id}}" class="text-decoration-none text-dark">
           <div class="card h-100">
             <img th:src="@{'/book/' + ${book.id} + '/cover'}"
                  th:alt="${book.title}"
-                 class="card-img-top"
+                 class="book-card-img-top"
                  onerror="this.onerror=null;this.src='/images/coverPlaceholder.jpg';" />
             <div class="card-body">
               <h5 class="card-title" th:text="${book.title}">Titolo libro</h5>
