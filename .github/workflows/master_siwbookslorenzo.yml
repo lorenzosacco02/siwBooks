@@ -60,12 +60,12 @@ jobs:
           az webapp config appsettings set --name SIWBooksLorenzo \
             --resource-group AppSiw \
             --settings \
-              DB_HOST=${{ secrets.DB_HOST }} \
-              DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
-              GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-            
+              "DB_HOST=${{ secrets.DB_HOST }}" \
+              "DB_USERNAME=${{ secrets.DB_USERNAME }}" \
+              "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" \
+              "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" \
+              "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}"
+
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
